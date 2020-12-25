@@ -29,6 +29,8 @@ def generate(seed: int) -> np.ndarray:
     board = np.zeros((9, 9), dtype=int) - 1
     for pos in get_position():
         y, x, v = pos
+        if 0 <= board[y, x] and board[y, x] < 9:
+            continue
         board[y, x] = v
         num_solutions = get_num_solutions(board)
         if num_solutions == 1:
