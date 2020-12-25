@@ -77,7 +77,7 @@ class Game:
         solution_board = None
         current_cell = None
         while state != State.QUIT:
-            # draw
+            # VIEW: draw
             self.screen.fill((255, 255, 255))
             if state == State.WAITING:
                 self.screen.blit(*self._blit_waiting())
@@ -89,7 +89,7 @@ class Game:
                 self.screen.blits(self._blit_board_list(initial_board, current_board, current_cell), doreturn=False)
                 self.screen.blit(*self._blit_panel(self.youwin_panel_surf))
             pygame.display.flip()
-            # event
+            # CONTROLLER: event
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     state = State.QUIT
