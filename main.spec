@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/home/khanh/programming/sudoku'],
+             pathex=['./'],
              binaries=[],
              datas=[
                 ('./sudoku/pygame_gui/assets/0.png', './sudoku/pygame_gui/assets/'),
