@@ -2,6 +2,12 @@
 
 Simple sudoku solver and unique-solution sudoku generator using PySAT
 
+## Bundle
+
+```bash
+pyinstaller main.spec
+```
+
 ## Screenshots
 
 ### Waiting

@@ -1,0 +1,56 @@
+# -*- mode: python ; coding: utf-8 -*-
+
+block_cipher = None
+
+
+a = Analysis(['main.py'],
+             pathex=['/home/khanh/programming/sudoku'],
+             binaries=[],
+             datas=[
+                ('./sudoku/pygame_gui/assets/0.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/initial.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/waiting.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/6.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/4.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/waiting_panel.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/playing_panel.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/8.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/1.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/youwin_panel.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/9.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/3.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/5.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/7.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/current.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/violation.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/2.png', './sudoku/pygame_gui/assets/'),
+                ('./sudoku/pygame_gui/assets/block.png', './sudoku/pygame_gui/assets/'),
+             ],
+             hiddenimports=[],
+             hookspath=[],
+             runtime_hooks=[],
+             excludes=[],
+             win_no_prefer_redirects=False,
+             win_private_assemblies=False,
+             cipher=block_cipher,
+             noarchive=False)
+pyz = PYZ(a.pure, a.zipped_data,
+             cipher=block_cipher)
+exe = EXE(pyz,
+          a.scripts,
+          [],
+          exclude_binaries=True,
+          name='main',
+          debug=False,
+          bootloader_ignore_signals=False,
+          strip=False,
+          upx=True,
+          console=True )
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               upx_exclude=[],
+               name='main')
