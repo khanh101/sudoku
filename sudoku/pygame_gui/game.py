@@ -100,10 +100,12 @@ class Game:
                     state = State.ENDED
         pygame.quit()
 
-    def _pos_to_cell(self, pos: tuple[int, int]) -> tuple[int, int]:
+    def _pos_to_cell(self, pos: tuple[int, int]) -> Optional[tuple[int, int]]:
         x, y = pos
         col = x // self.cell_size
         row = y // self.cell_size
+        if not((1 <= row < 9) and (1 <= col < 9)):
+            return None
         return row, col
 
     def _cell_to_pos_tl(self, cell: tuple[int, int]) -> tuple[int, int]:
