@@ -77,20 +77,36 @@ class Game:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         current_cell = self._pos_to_cell(event.pos)
                     if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RIGHT: # Right
+                            if current_cell is not None:
+                                if current_cell[1] < 8:
+                                    current_cell = current_cell[0], current_cell[1] + 1
+                        if event.key == pygame.K_LEFT: # Left
+                            if current_cell is not None:
+                                if current_cell[1] > 0:
+                                    current_cell = current_cell[0], current_cell[1] - 1
+                        if event.key == pygame.K_DOWN: # Down
+                            if current_cell is not None:
+                                if current_cell[0] < 8:
+                                    current_cell = current_cell[0] + 1, current_cell[1]
+                        if event.key == pygame.K_UP: # Up
+                            if current_cell is not None:
+                                if current_cell[0] > 0:
+                                    current_cell = current_cell[0] - 1, current_cell[1]
                         if event.unicode in [str(num) for num in range(1, 10)]:
                             value = int(event.unicode)
                             if current_cell is not None:
                                 self.board_game.place(current_cell, value)
-                        if event.unicode in ["x", "X"]:
+                        if event.key == pygame.K_x or event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
                             if current_cell is not None:
                                 self.board_game.place(current_cell, 0)
-                        if event.unicode in ["r", "R"]:
+                        if event.key == pygame.K_r:
                             self.board_game.reset()
                 if state == state.ENDED:
                     if event.type == pygame.KEYDOWN:
-                        if event.unicode in ["n", "N"]:
+                        if event.key == pygame.K_n:
                             state = State.WAITING
-                        if event.unicode in ["r", "R"]:
+                        if event.key == pygame.K_r:
                             self.board_game.reset()
 
             if state == state.WAITING:
