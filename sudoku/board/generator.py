@@ -2,7 +2,7 @@ from typing import Iterator
 
 import numpy as np
 
-from board.solver import solve_all
+from sudoku.board.solver import solve_all
 
 Pos = tuple[int, int, int]
 Cell = tuple[int, int]

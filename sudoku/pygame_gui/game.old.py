@@ -4,20 +4,21 @@ import multiprocessing as mp
 import numpy as np
 import pygame
 
-import board
+from sudoku import board
+
 
 class Game:
     cell_size: int = 300
     screen: pygame.Surface
-    waiting_panel_surf: pygame.Surface = pygame.image.load("./game/assets/waiting_panel.png")
-    waiting_surf: pygame.Surface = pygame.image.load("./game/assets/waiting.png")
-    playing_panel_surf: pygame.Surface = pygame.image.load("./game/assets/playing_panel.png")
-    block_surf: pygame.Surface = pygame.image.load("./game/assets/block.png")
-    current_surf: pygame.Surface = pygame.image.load("./game/assets/current.png")
-    initial_surf: pygame.Surface = pygame.image.load("./game/assets/initial.png")
-    violation_surf: pygame.Surface = pygame.image.load("./game/assets/violation.png")
-    value_surf_list: list[pygame.Surface] = [pygame.image.load(f"./game/assets/{num}.png") for num in range(10)]
-    youwin_panel_surf: pygame.Surface = pygame.image.load("./game/assets/youwin_panel.png")
+    waiting_panel_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/waiting_panel.png")
+    waiting_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/waiting.png")
+    playing_panel_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/playing_panel.png")
+    block_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/block.png")
+    current_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/current.png")
+    initial_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/initial.png")
+    violation_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/violation.png")
+    value_surf_list: list[pygame.Surface] = [pygame.image.load(f"./sudoku/pygame_gui/assets/{num}.png") for num in range(10)]
+    youwin_panel_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/youwin_panel.png")
     def __init__(self, cell_size: int = 60):
         self.cell_size = cell_size
         self.screen = pygame.display.set_mode(size=(9*cell_size, 11*cell_size))
