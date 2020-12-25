@@ -79,9 +79,11 @@ class Game:
                     if event.type == pygame.KEYDOWN:
                         if event.unicode in [str(num) for num in range(1, 10)]:
                             value = int(event.unicode)
-                            self.board_game.place(current_cell, value)
+                            if current_cell is not None:
+                                self.board_game.place(current_cell, value)
                         if event.unicode in ["x", "X"]:
-                            self.board_game.place(current_cell, 0)
+                            if current_cell is not None:
+                                self.board_game.place(current_cell, 0)
                         if event.unicode in ["r", "R"]:
                             self.board_game.reset()
                 if state == state.ENDED:
