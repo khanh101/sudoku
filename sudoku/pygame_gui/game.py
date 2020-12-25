@@ -62,6 +62,7 @@ class Game:
                 self.screen.blits(self._blit_board_list(initial_board, current_board, current_cell), doreturn=False)
                 self.screen.blit(*self._blit_panel(self.playing_panel_surf))
             if state == State.ENDED:
+                youwin, initial_board, current_board = self.board_game.view()
                 self.screen.blits(self._blit_board_list(initial_board, current_board, current_cell), doreturn=False)
                 self.screen.blit(*self._blit_panel(self.youwin_panel_surf))
             pygame.display.flip()
@@ -147,9 +148,6 @@ class Game:
     def _blit_panel(self, panel: pygame.Surface) -> tuple[pygame.Surface, pygame.Rect]:
         return panel, pygame.Rect((0, 9 * self.cell_size), (9 * self.cell_size, 2 * self.cell_size))
 
-    def _blit_youwin(self) -> tuple[pygame.Surface, pygame.Rect]:
-        return self.youwin_surf, pygame.Rect((0, 0), (9 * self.cell_size, 9 * self.cell_size))
-
     def _blit_waiting(self) -> tuple[pygame.Surface, pygame.Rect]:
         return self.waiting_surf, pygame.Rect((0, 0), (9 * self.cell_size, 9 * self.cell_size))
 
@@ -160,7 +158,7 @@ class Game:
         for row in range(9):
             for col in range(9):
                 x, y = self._cell_to_pos_tl((row, col))
-                if 1 <= initial_board[row, col] and initial_board[row, col] <= 9:
+                if 1 <= initial_board[row, col] <= 9:
                     sequence.append(
                         (self.initial_surf, pygame.Rect((x, y), (self.cell_size, self.cell_size))),
                     )

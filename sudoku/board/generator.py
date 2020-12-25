@@ -44,7 +44,7 @@ def generate(seed: int) -> np.ndarray:
     # generate unique solution board
     for pos in get_position():
         y, x, v = pos
-        if 0 <= board[y, x] and board[y, x] < 9:
+        if 0 <= board[y, x] < 9:
             continue
         board[y, x] = v
         num_solutions = get_num_solutions(board)
@@ -55,7 +55,7 @@ def generate(seed: int) -> np.ndarray:
     # simplify board
     for cell in get_cell():
         y, x = cell
-        if not (0 <= board[y, x] and board[y, x] < 9):
+        if not (0 <= board[y, x] < 9):
             continue
         v = board[y, x]
         board[y, x] = -1

@@ -2,12 +2,12 @@ import multiprocessing as mp
 from typing import Iterator, Any
 
 
-class background(Iterator):
+class Background(Iterator):
     iterator: Iterator[Any]
 
     def __init__(self, iterator: Iterator[Any]):
         self.parent_conn, self.child_conn = mp.Pipe()
-        self.process = mp.Process(target=background._background_routine, args=(iterator, self.child_conn))
+        self.process = mp.Process(target=Background._background_routine, args=(iterator, self.child_conn))
         self.process.start()
         self.parent_conn.send(True)
 

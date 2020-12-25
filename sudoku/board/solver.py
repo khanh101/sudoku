@@ -65,7 +65,7 @@ def solve(board: np.ndarray, excluded: Optional[list[np.ndarray]] = None) -> tup
     for y in range(9):
         for x in range(9):
             v = board[y, x]
-            if 0 <= v and v < 9:
+            if 0 <= v < 9:
                 pos = y, x, v
                 pos_list.append(pos)
     add_all_active_clause(pos_list)

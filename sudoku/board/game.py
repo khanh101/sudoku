@@ -4,7 +4,7 @@ import numpy as np
 
 from sudoku.board.generator import generate
 from sudoku.board.solver import solve_all
-from sudoku.board.util import background
+from sudoku.board.util import Background
 
 
 class Game:
@@ -14,7 +14,7 @@ class Game:
     current_board: Optional[np.ndarray]
 
     def __init__(self, seed: int):
-        self.board_iterator = background(Game.get_board_iterator(seed))
+        self.board_iterator = Background(Game.get_board_iterator(seed))
         self.initial_board = None
         self.solution_board = None
         self.current_board = None
@@ -29,7 +29,7 @@ class Game:
 
     def place(self, cell: tuple[int, int], value: int = 0):
         row, col = cell
-        if 1 <= self.initial_board[row, col] and self.initial_board[row, col] <= 9:
+        if 1 <= self.initial_board[row, col] <= 9:
             return
         self.current_board[row, col] = value
 
