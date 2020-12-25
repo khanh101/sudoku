@@ -24,8 +24,6 @@ class Game:
 
     def new_board(self):
         self.initial_board, self.solution_board = next(self.board_iterator)
-        self.initial_board += 1
-        self.solution_board += 1
         self.current_board = np.array(self.initial_board, copy=True)
         print(self.solution_board)
 
@@ -45,6 +43,6 @@ class Game:
     def get_board_iterator(seed: int) -> Iterator[tuple[np.ndarray, np.ndarray]]:
         np.random.seed(seed)
         while True:
-            initial_board = generate(np.random.randint(0, 2 ** 32))
-            solution_board = next(solve_all(initial_board))
+            initial_board = 1 + generate(np.random.randint(0, 2 ** 32))
+            solution_board = 1 + next(solve_all(initial_board - 1))
             yield initial_board, solution_board
