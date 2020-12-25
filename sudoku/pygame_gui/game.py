@@ -1,12 +1,13 @@
 from enum import Enum
 from typing import Optional, Iterator
-import multiprocessing as mp
+
 import numpy as np
 import pygame
 
 from sudoku import board
 
 pygame.init()
+
 
 class Game:
     cell_size: int = 300
@@ -17,22 +18,25 @@ class Game:
     current_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/current.png")
     initial_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/initial.png")
     violation_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/violation.png")
-    value_surf_list: list[pygame.Surface] = [pygame.image.load(f"./sudoku/pygame_gui/assets/{num}.png") for num in range(10)]
+    value_surf_list: list[pygame.Surface] = [pygame.image.load(f"./sudoku/pygame_gui/assets/{num}.png") for num in
+                                             range(10)]
     youwin_panel_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/youwin_panel.png")
     screen: pygame.Surface
     board_game: board.Game
+
     def __init__(self, seed: int, cell_size: int = 60):
         self.cell_size = cell_size
-        self.waiting_panel_surf = pygame.transform.scale(Game.waiting_panel_surf, (9*cell_size, 2*cell_size))
-        self.waiting_surf = pygame.transform.scale(Game.waiting_surf, (9*cell_size, 9*cell_size))
-        self.playing_panel_surf = pygame.transform.scale(Game.playing_panel_surf, (9*cell_size, 2*cell_size))
-        self.block_surf = pygame.transform.scale(Game.block_surf, (3*cell_size, 3*cell_size))
+        self.waiting_panel_surf = pygame.transform.scale(Game.waiting_panel_surf, (9 * cell_size, 2 * cell_size))
+        self.waiting_surf = pygame.transform.scale(Game.waiting_surf, (9 * cell_size, 9 * cell_size))
+        self.playing_panel_surf = pygame.transform.scale(Game.playing_panel_surf, (9 * cell_size, 2 * cell_size))
+        self.block_surf = pygame.transform.scale(Game.block_surf, (3 * cell_size, 3 * cell_size))
         self.current_surf = pygame.transform.scale(Game.current_surf, (cell_size, cell_size))
         self.initial_surf = pygame.transform.scale(Game.initial_surf, (cell_size, cell_size))
         self.violation_surf = pygame.transform.scale(Game.violation_surf, (cell_size, cell_size))
-        self.value_surf_list = [pygame.transform.scale(value_surf, (cell_size, cell_size)) for value_surf in Game.value_surf_list]
-        self.youwin_panel_surf = pygame.transform.scale(Game.youwin_panel_surf, (9*cell_size, 2*cell_size))
-        self.screen = pygame.display.set_mode(size=(9*cell_size, 11*cell_size))
+        self.value_surf_list = [pygame.transform.scale(value_surf, (cell_size, cell_size)) for value_surf in
+                                Game.value_surf_list]
+        self.youwin_panel_surf = pygame.transform.scale(Game.youwin_panel_surf, (9 * cell_size, 2 * cell_size))
+        self.screen = pygame.display.set_mode(size=(9 * cell_size, 11 * cell_size))
         self.board_game = board.Game(seed)
 
     def __del__(self):
@@ -141,15 +145,16 @@ class Game:
         return violation_board
 
     def _blit_panel(self, panel: pygame.Surface) -> tuple[pygame.Surface, pygame.Rect]:
-        return panel, pygame.Rect((0, 9*self.cell_size), (9*self.cell_size, 2*self.cell_size))
+        return panel, pygame.Rect((0, 9 * self.cell_size), (9 * self.cell_size, 2 * self.cell_size))
 
     def _blit_youwin(self) -> tuple[pygame.Surface, pygame.Rect]:
-        return self.youwin_surf, pygame.Rect((0, 0), (9*self.cell_size, 9*self.cell_size))
+        return self.youwin_surf, pygame.Rect((0, 0), (9 * self.cell_size, 9 * self.cell_size))
 
     def _blit_waiting(self) -> tuple[pygame.Surface, pygame.Rect]:
-        return self.waiting_surf, pygame.Rect((0, 0), (9*self.cell_size, 9*self.cell_size))
+        return self.waiting_surf, pygame.Rect((0, 0), (9 * self.cell_size, 9 * self.cell_size))
 
-    def _blit_board_list(self, initial_board: np.ndarray, current_board: np.ndarray, current_cell: Optional[tuple[int, int]]) -> list[tuple[pygame.Surface, pygame.Rect]]:
+    def _blit_board_list(self, initial_board: np.ndarray, current_board: np.ndarray,
+                         current_cell: Optional[tuple[int, int]]) -> list[tuple[pygame.Surface, pygame.Rect]]:
         sequence = []
         # initial
         for row in range(9):
@@ -164,7 +169,7 @@ class Game:
             for col in range(0, 9, 3):
                 x, y = self._cell_to_pos_tl((row, col))
                 sequence.append(
-                    (self.block_surf, pygame.Rect((x, y), (3*self.cell_size, 3*self.cell_size))),
+                    (self.block_surf, pygame.Rect((x, y), (3 * self.cell_size, 3 * self.cell_size))),
                 )
         # values
         for row in range(9):

@@ -7,6 +7,7 @@ from sudoku.board.solver import solve_all
 Pos = tuple[int, int, int]
 Cell = tuple[int, int]
 
+
 def get_num_solutions(board: np.ndarray, cap: int = 2) -> int:
     num_solutions = 0
     for _ in solve_all(board):
@@ -14,6 +15,7 @@ def get_num_solutions(board: np.ndarray, cap: int = 2) -> int:
         if num_solutions >= cap:
             break
     return num_solutions
+
 
 def get_position() -> Iterator[Pos]:
     position_list = []
@@ -25,6 +27,7 @@ def get_position() -> Iterator[Pos]:
     np.random.shuffle(position_list)
     return iter(position_list)
 
+
 def get_cell() -> Iterator[Cell]:
     cell_list = []
     for y in range(9):
@@ -33,6 +36,7 @@ def get_cell() -> Iterator[Cell]:
             cell_list.append(cell)
     np.random.shuffle(cell_list)
     return iter(cell_list)
+
 
 def generate(seed: int) -> np.ndarray:
     np.random.seed(seed)
@@ -62,5 +66,3 @@ def generate(seed: int) -> np.ndarray:
             board[y, x] = v
 
     return board
-
-
