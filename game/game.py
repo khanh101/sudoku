@@ -7,7 +7,7 @@ import pygame
 import board
 
 class Game:
-    cell_size: int = (300, 300)
+    cell_size: int = 300
     screen: pygame.Surface
     waiting_panel_surf: pygame.Surface = pygame.image.load("./game/assets/waiting_panel.png")
     waiting_surf: pygame.Surface = pygame.image.load("./game/assets/waiting.png")
@@ -31,23 +31,20 @@ class Game:
         self.value_surf_list = [pygame.transform.scale(value_surf, (cell_size, cell_size)) for value_surf in Game.value_surf_list]
         self.youwin_panel_surf = pygame.transform.scale(Game.youwin_panel_surf, (9*cell_size, 2*cell_size))
 
-    def get_value_surf(self, num: int) -> pygame.Surface:
-        return self.value_surf_list[num]
-
-    def pos_to_cell(self, pos: tuple[int, int]) -> tuple[int, int]:
+    def _pos_to_cell(self, pos: tuple[int, int]) -> tuple[int, int]:
         x, y = pos
         col = x // self.cell_size
         row = y // self.cell_size
         return row, col
 
-    def cell_to_pos_tl(self, cell: tuple[int, int]) -> tuple[int, int]:
+    def _cell_to_pos_tl(self, cell: tuple[int, int]) -> tuple[int, int]:
         row, col = cell
         y = row * self.cell_size
         x = col * self.cell_size
         return x, y
 
     @staticmethod
-    def create_board(seed: int) -> tuple[np.ndarray, np.ndarray]:
+    def _create_board(seed: int) -> tuple[np.ndarray, np.ndarray]:
         current_board = 1 + board.generate(seed)
         solution_board = 1 + next(board.solve_all(current_board - 1))
         return current_board, solution_board
@@ -69,7 +66,7 @@ class Game:
                     if not mp_running.value:
                         break
                 if board_queue.empty():
-                    board_queue.put(Game.create_board(np.random.randint(0, 2**32)))
+                    board_queue.put(Game._create_board(np.random.randint(0, 2 ** 32)))
         board_process = mp.Process(target=create_board)
         board_process.start()
         initial_board = None
@@ -98,7 +95,7 @@ class Game:
                     break
                 if state == state.PLAYING:
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        current_cell = self.pos_to_cell(event.pos)
+                        current_cell = self._pos_to_cell(event.pos)
                     if event.type == pygame.KEYDOWN:
                         if event.unicode in [str(num) for num in range(1, 10)]:
                             current_value = int(event.unicode)
@@ -132,7 +129,7 @@ class Game:
         board_process.join()
 
     @staticmethod
-    def get_violation_cell(cell: tuple[int, int]) -> Iterator[tuple[int, int]]:
+    def _get_violation_cell(cell: tuple[int, int]) -> Iterator[tuple[int, int]]:
         row, col = cell
         for r in range(9):
             if r != row:
@@ -149,7 +146,7 @@ class Game:
                 yield btlr + r, btlc + c
 
     @staticmethod
-    def get_violation(current_board: np.ndarray) -> np.ndarray:
+    def _get_violation_board(current_board: np.ndarray) -> np.ndarray:
         violation_board = np.zeros((9, 9), dtype=bool)
         for row in range(9):
             for col in range(9):
@@ -158,7 +155,7 @@ class Game:
                     continue
                 value = current_board[cell]
                 if value != 0:
-                    for vcell in Game.get_violation_cell(cell):
+                    for vcell in Game._get_violation_cell(cell):
                         if current_board[vcell] == value:
                             violation_board[cell] = True
                             violation_board[vcell] = True
@@ -178,7 +175,7 @@ class Game:
         # initial
         for row in range(9):
             for col in range(9):
-                x, y = self.cell_to_pos_tl((row, col))
+                x, y = self._cell_to_pos_tl((row, col))
                 if 1 <= initial_board[row, col] and initial_board[row, col] <= 9:
                     sequence.append(
                         (self.initial_surf, pygame.Rect((x, y), (self.cell_size, self.cell_size))),
@@ -186,31 +183,31 @@ class Game:
         # block
         for row in range(0, 9, 3):
             for col in range(0, 9, 3):
-                x, y = self.cell_to_pos_tl((row, col))
+                x, y = self._cell_to_pos_tl((row, col))
                 sequence.append(
                     (self.block_surf, pygame.Rect((x, y), (3*self.cell_size, 3*self.cell_size))),
                 )
         # values
         for row in range(9):
             for col in range(9):
-                x, y = self.cell_to_pos_tl((row, col))
+                x, y = self._cell_to_pos_tl((row, col))
                 value = current_board[row, col]
                 sequence.append(
                     (self.value_surf_list[value], pygame.Rect((x, y), (self.cell_size, self.cell_size))),
                 )
         # violation
-        violation_board = Game.get_violation(current_board)
+        violation_board = Game._get_violation_board(current_board)
         for row in range(9):
             for col in range(9):
                 if violation_board[row, col]:
-                    x, y = self.cell_to_pos_tl((row, col))
+                    x, y = self._cell_to_pos_tl((row, col))
                     sequence.append(
                         (self.violation_surf, pygame.Rect((x, y), (self.cell_size, self.cell_size))),
                     )
 
         # current cell
         if current_cell is not None:
-            x, y = self.cell_to_pos_tl(current_cell)
+            x, y = self._cell_to_pos_tl(current_cell)
             sequence.append(
                 (self.current_surf, pygame.Rect((x, y), (self.cell_size, self.cell_size))),
             )
