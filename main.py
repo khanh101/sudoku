@@ -1,4 +1,4 @@
 from game import Game
-
+import time
 g = Game()
-g.loop(1234)
+g.loop(int(time.time()))
