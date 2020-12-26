@@ -31,7 +31,8 @@ let state = STATE_WAITING;
 
 function setup() {
     noLoop();
-    createCanvas(9 * cell_size, 11 * cell_size);
+    let canvas = createCanvas(9 * cell_size, 11 * cell_size);
+    canvas.position(Math.floor(screen_width/2 - 4.5 * cell_size), 0);
     waiting_panel_img.resize(9 * cell_size, 2 * cell_size);
     waiting_img.resize(9 * cell_size, 9 * cell_size);
     playing_panel_img.resize(9 * cell_size, 2 * cell_size);
@@ -58,7 +59,6 @@ let violation_mask = undefined;
 
 function update_board() {
     httpGet("api/view", "json", function (response) {
-        console.log(response);
         youwin = response.youwin;
         current_board = response.current_board;
         initial_mask = response.initial_mask;
