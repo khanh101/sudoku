@@ -3,8 +3,20 @@ from typing import Iterator, Optional, Any
 import numpy as np
 
 from sudoku.board.generator import generate
-from sudoku.board.solver import solve_all
+from sudoku.board.solver import solve_all, implication_once
 
+
+
+class ImplicationView:
+    row: int
+    col: int
+    value: int
+    def marshal(self) -> dict[str, Any]:
+        return {
+            "row": self.row,
+            "col": self.col,
+            "value": self.value,
+        }
 class View:
     youwin: bool
     current_board: np.ndarray
@@ -28,6 +40,17 @@ class Game:
         self.solution_board = 1 + next(solve_all(self.current_board - 1))
         self.initial_mask = self.current_board.astype(bool)
         print(self.solution_board)
+
+    def implication(self) -> Optional[ImplicationView]:
+        implication = implication_once(self.current_board - 1)
+        if implication is None:
+            return None
+        row, col, value = implication
+        view = ImplicationView()
+        view.row = row
+        view.col = col
+        view.value = value + 1
+        return view
 
     def view(self) -> View:
         view = View()

@@ -2,15 +2,15 @@ const screen_height = window.innerHeight;
 const screen_width = window.innerWidth;
 const cell_size = Math.floor(Math.min(screen_height / 11, screen_width / 9));
 
-let waiting_panel_img = undefined;
-let waiting_img = undefined;
-let playing_panel_img = undefined;
-let block_img = undefined;
-let current_img = undefined;
-let initial_img = undefined;
-let violation_img = undefined;
+let waiting_panel_img = null;
+let waiting_img = null;
+let playing_panel_img = null;
+let block_img = null;
+let current_img = null;
+let initial_img = null;
+let violation_img = null;
 let value_img_list = [];
-let youwin_panel_img = undefined;
+let youwin_panel_img = null;
 function preload() {
     waiting_panel_img = loadImage("assets/waiting_panel.png");
     waiting_img = loadImage("assets/waiting.png");
@@ -50,12 +50,11 @@ function setup() {
 }
 
 
-let current_cell = undefined;
-let youwin = undefined;
-let current_board = undefined;
-let initial_mask = undefined;
-let violation_mask = undefined;
-
+let current_cell = null;
+let youwin = null;
+let current_board = null;
+let initial_mask = null;
+let violation_mask = null;
 
 function update_board() {
     httpGet("api/view", "json", function (response) {
@@ -78,6 +77,17 @@ function place(row, col, value) {
 
 function reset() {
     httpPost("api/reset", "json", {}, update_board);
+}
+
+function implication() {
+    httpGet("api/implication", "json", function (response) {
+        if (response !== null) {
+            const {row, col, value} = response;
+            current_cell = [row, col]
+            place(row, col, value);
+        }
+    })
+
 }
 
 function draw() {
@@ -111,7 +121,7 @@ function draw_panel_playing() {
 }
 
 function draw_board_playing() {
-    if (current_board !== undefined && initial_mask !== undefined && violation_mask !== undefined) {
+    if (current_board !== null && initial_mask !== null && violation_mask !== null) {
         // initial
         for (let row = 0; row < 9; row++) {
             for (let col = 0; col < 9; col++) {
@@ -146,7 +156,7 @@ function draw_board_playing() {
             }
         }
         // current
-        if (current_cell !== undefined) {
+        if (current_cell !== null) {
             const [row, col] = current_cell;
             const [x, y] = cell_to_pos_tl(row, col);
             image(current_img, x, y);
@@ -163,7 +173,7 @@ function pos_to_cell(x, y) {
     const col = Math.floor(x / cell_size);
     const row = Math.floor(y / cell_size);
     if (!((0 <= col && col < 9) && (0 <= row && row < 9))) {
-        return undefined;
+        return null;
     }
     return [row, col]
 }
@@ -179,28 +189,28 @@ function keyPressed() {
         return key - 48;
     }
     if (keyCode === LEFT_ARROW) {
-        if (current_cell !== undefined) {
+        if (current_cell !== null) {
             if (current_cell[1] > 0) {
                 current_cell[1] -= 1;
             }
         }
     }
     if (keyCode === RIGHT_ARROW) {
-        if (current_cell !== undefined) {
+        if (current_cell !== null) {
             if (current_cell[1] < 8) {
                 current_cell[1] += 1;
             }
         }
     }
     if (keyCode === UP_ARROW) {
-        if (current_cell !== undefined) {
+        if (current_cell !== null) {
             if (current_cell[0] > 0) {
                 current_cell[0] -= 1;
             }
         }
     }
     if (keyCode === DOWN_ARROW) {
-        if (current_cell !== undefined) {
+        if (current_cell !== null) {
             if (current_cell[0] < 8) {
                 current_cell[0] += 1;
             }
@@ -208,13 +218,13 @@ function keyPressed() {
     }
     if (48 <= keyCode && keyCode < 58) {
         const value = key_to_value(keyCode);
-        if (current_cell !== undefined) {
+        if (current_cell !== null) {
             const [row, col] = current_cell;
             place(row, col, value);
         }
     }
     if (keyCode === 88 || keyCode === 8 || keyCode === 46) {
-        if (current_cell !== undefined) {
+        if (current_cell !== null) {
             const [row, col] = current_cell;
             place(row, col, 0);
         }
@@ -222,5 +232,8 @@ function keyPressed() {
     if (keyCode === 82) {
         reset();
     }// r
+    if (keyCode == 72) {
+        implication();
+    }// h
     draw();
 }

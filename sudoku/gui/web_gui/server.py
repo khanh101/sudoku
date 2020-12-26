@@ -22,6 +22,7 @@ class Game:
         self.app.route("/api/new", methods=["POST"])(self.new)
         self.app.route("/api/place", methods=["POST"])(self.place)
         self.app.route("/api/reset", methods=["POST"])(self.reset)
+        self.app.route("/api/implication", methods=["GET"])(self.implication)
 
     def serve_static(self, path):
         return send_from_directory("./static/", path)
@@ -29,6 +30,18 @@ class Game:
     def new(self):
         self.board_game = board.Game(int(time.time()))
         return jsonify()
+
+    def implication(self):
+        '''
+        {
+            row: int,
+            col: int,
+            value: int
+        }
+        '''
+        if self.board_game is None:
+            return jsonify(), 400
+        return jsonify(self.board_game.implication().marshal())
 
     def view(self):
         '''
