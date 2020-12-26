@@ -41,7 +41,10 @@ class Game:
         '''
         if self.board_game is None:
             return jsonify(), 400
-        return jsonify(self.board_game.implication().marshal())
+        implication = self.board_game.implication()
+        if implication is None:
+            return jsonify(None)
+        return jsonify(implication)
 
     def view(self):
         '''

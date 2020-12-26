@@ -152,7 +152,7 @@ def implication_once(board: np.ndarray) -> Optional[tuple[int, int, int]]:
     for conj in formula:
         if len(conj) == 1:
             var = conj[0]
-            if truth[abs(var)] != 0:
+            if truth[abs(var)] == 0:
                 truth[abs(var)] = sign(var)
     # detect unsat
     for conj in formula:
@@ -162,7 +162,8 @@ def implication_once(board: np.ndarray) -> Optional[tuple[int, int, int]]:
     # implication
     for conj in formula:
         var01 = [var for var in conj if sign(var) * truth[abs(var)] != -1]
-        if 1 in var01:
+        val01 = [sign(var) * truth[abs(var)] for var in conj if sign(var) * truth[abs(var)] != -1]
+        if 1 in val01:
             continue  # sat
         if len(var01) == 1 and var01[0] > 0:
             return var2pos(var01[0])  # implication
