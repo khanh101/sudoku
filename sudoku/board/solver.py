@@ -1,6 +1,7 @@
 from typing import Optional, Iterator
 
 import numpy as np
+from pysat.formula import CNF
 from pysat.solvers import Glucose4
 
 pos2var_map: np.ndarray = np.arange(1, 1 + 9 * 9 * 9).reshape((9, 9, 9))
@@ -30,35 +31,35 @@ def var2pos(var: Var) -> Pos:
 def solve_all(board: np.ndarray) -> Iterator[np.ndarray]:
     solution_list = []
     while True:
-        solvable, solution = solve(board, solution_list)
+        solvable, solution = solve_once(board, solution_list)
         if not solvable:
             break
         solution_list.append(solution)
         yield solution
 
 
-def solve(board: np.ndarray, excluded: Optional[list[np.ndarray]] = None) -> tuple[bool, Optional[np.ndarray]]:
-    solver = Glucose4()
+def board_to_formula(board: np.ndarray, excluded: Optional[list[np.ndarray]] = None) -> CNF:
+    formula = CNF()
 
     def add_unique_active_clause(pos_list: list[Pos]):
         var_list = [pos2var(pos) for pos in pos_list]
         # there is at least 1 active variable: a1 or a2 or ... or an
-        solver.add_clause([var for var in var_list])
+        formula.append([var for var in var_list])
         # there is no 2 active variables: (not a1 or not a2) and (not a1 or not a3)
         for var1idx in range(len(var_list)):
             var1 = var_list[var1idx]
             for var2idx in range(var1idx + 1, len(var_list)):
                 var2 = var_list[var2idx]
-                solver.add_clause([-var1, -var2])
+                formula.append([-var1, -var2])
 
     def add_all_active_clause(pos_list: list[Pos]):
         var_list = [pos2var(pos) for pos in pos_list]
         for var in var_list:
-            solver.add_clause([var])
+            formula.append([var])
 
     def add_not_all_active_clause(pos_list: list[Pos]):
         var_list = [pos2var(pos) for pos in pos_list]
-        solver.add_clause([-var for var in var_list])  # not (a and b) = (not a or not b)
+        formula.append([-var for var in var_list])  # not (a and b) = (not a or not b)
 
     # add board
     pos_list = []
@@ -116,7 +117,15 @@ def solve(board: np.ndarray, excluded: Optional[list[np.ndarray]] = None) -> tup
                         pos = tl_y + dy, tl_x + dx, v
                         pos_list.append(pos)
                 add_unique_active_clause(pos_list)
+
+    return formula
+
+
+
+def solve_once(board: np.ndarray, excluded: Optional[list[np.ndarray]] = None) -> tuple[bool, Optional[np.ndarray]]:
+    formula = board_to_formula(board, excluded)
     # solve
+    solver = Glucose4(bootstrap_with=formula)
     solvable: bool = solver.solve()
     if not solvable:
         return False, None
