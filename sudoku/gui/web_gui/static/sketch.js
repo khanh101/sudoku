@@ -245,7 +245,7 @@ function keyPressed() {
     }// x
     if (keyCode === 85) {
         undo();
-    }// r
+    }// u
     if (keyCode == 72) {
         implication();
     }// h
