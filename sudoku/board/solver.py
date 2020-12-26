@@ -158,15 +158,24 @@ def implication_once(board: np.ndarray) -> Optional[tuple[int, int, int]]:
     for conj in formula:
         var01 = [var for var in conj if sign(var) * truth[abs(var)] != -1]
         if len(var01) == 0:
+            print("unsat")
             return None  # unsat
     # implication
-    for conj in formula:
-        var01 = [var for var in conj if sign(var) * truth[abs(var)] != -1]
-        val01 = [sign(var) * truth[abs(var)] for var in var01]
-        if 1 in val01:
-            continue  # sat
-        if len(var01) == 1:
-            print(var01[0])
-            if var01[0] > 0:
+    while True:
+        better = False
+        for conj in formula:
+            var01 = [var for var in conj if sign(var) * truth[abs(var)] != -1]
+            val01 = [sign(var) * truth[abs(var)] for var in var01]
+            if 1 in val01:
+                continue  # sat
+            if len(var01) == 1:
+                if var01[0] < 0:
+                    truth[abs(var01[0])] = -1
+                    better = True
+                    continue
+                print("implication")
                 return var2pos(var01[0])  # implication
+        if not better:
+            break
+    print("cannot find")
     return None

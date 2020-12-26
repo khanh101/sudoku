@@ -44,7 +44,7 @@ class Game:
         implication = self.board_game.implication()
         if implication is None:
             return jsonify(None)
-        return jsonify(implication)
+        return jsonify(implication.marshal())
 
     def view(self):
         '''
