@@ -2,21 +2,13 @@
 
 Simple sudoku solver and unique-solution sudoku generator using PySAT
 
+# Features
 
-## Screenshots
+- Glucose4 SAT solver
 
-### Waiting
+- Help with implication
 
-![https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-51-49.png](https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-51-49.png)
+- Undo
 
-### New game
+- Web interface
 
-![https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-36-24.png](https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-36-24.png)
-
-### Violation Checking
-
-![https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-38-30.png](https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-38-30.png)
-
-### Unique solution
-
-![https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-38-12.png](https://raw.githubusercontent.com/khanhhhh/sudoku/main/assets/Screenshot%20from%202020-12-26%2000-38-12.png)
