@@ -11,16 +11,16 @@ pygame.init()
 
 class Game:
     cell_size: int = 300
-    waiting_panel_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/waiting_panel.png")
-    waiting_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/waiting.png")
-    playing_panel_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/playing_panel.png")
-    block_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/block.png")
-    current_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/current.png")
-    initial_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/initial.png")
-    violation_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/violation.png")
-    value_surf_list: list[pygame.Surface] = [pygame.image.load(f"./sudoku/pygame_gui/assets/{num}.png") for num in
+    waiting_panel_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/waiting_panel.png")
+    waiting_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/waiting.png")
+    playing_panel_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/playing_panel.png")
+    block_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/block.png")
+    current_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/current.png")
+    initial_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/initial.png")
+    violation_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/violation.png")
+    value_surf_list: list[pygame.Surface] = [pygame.image.load(f"./sudoku/gui/assets/{num}.png") for num in
                                              range(10)]
-    youwin_panel_surf: pygame.Surface = pygame.image.load("./sudoku/pygame_gui/assets/youwin_panel.png")
+    youwin_panel_surf: pygame.Surface = pygame.image.load("./sudoku/gui/assets/youwin_panel.png")
     screen: pygame.Surface
     board_game: board.Game
 
