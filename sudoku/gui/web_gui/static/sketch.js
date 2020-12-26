@@ -1,6 +1,7 @@
 const screen_height = window.innerHeight;
 const screen_width = window.innerWidth;
-const cell_size = Math.floor(Math.min(screen_height / 11, screen_width / 9));
+const pad = 10;
+const cell_size = Math.floor(Math.min((screen_height-2*pad) / 11, (screen_width-2*pad) / 9));
 
 let waiting_panel_img = null;
 let waiting_img = null;
@@ -32,7 +33,7 @@ let state = STATE_WAITING;
 function setup() {
     noLoop();
     let canvas = createCanvas(9 * cell_size, 11 * cell_size);
-    canvas.position(Math.floor(screen_width/2 - 4.5 * cell_size), 0);
+    canvas.position(screen_width - pad - 9 * cell_size, pad);
     waiting_panel_img.resize(9 * cell_size, 2 * cell_size);
     waiting_img.resize(9 * cell_size, 9 * cell_size);
     playing_panel_img.resize(9 * cell_size, 2 * cell_size);
@@ -81,11 +82,14 @@ function reset() {
 
 function implication() {
     httpGet("api/implication", "json", function (response) {
-        if (response !== null) {
-            const {row, col, value} = response;
-            current_cell = [row, col]
-            place(row, col, value);
+        if (response === null) {
+            document.getElementById("implication").textContent = `implication: could not find`;
+            return;
         }
+        const {row, col, value} = response;
+        current_cell = [row, col]
+        place(row, col, value);
+        document.getElementById("implication").textContent = `implication: found {row: ${row}, col: ${col}, value ${value}}`;
     })
 
 }
