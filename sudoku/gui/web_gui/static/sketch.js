@@ -68,6 +68,18 @@ function update_board() {
     });
 }
 
+function place(row, col, value) {
+    httpPost("api/place", "json", {
+        row: row,
+        col: col,
+        value: value,
+    }, update_board);
+}
+
+function reset() {
+    httpPost("api/reset", "json", {}, update_board);
+}
+
 function draw() {
     background(200, 200, 200);
     switch (state) {
@@ -198,25 +210,17 @@ function keyPressed() {
         const value = key_to_value(keyCode);
         if (current_cell !== undefined) {
             const [row, col] = current_cell;
-            httpPost("api/place", "json", {
-                row: row,
-                col: col,
-                value: value,
-            }, draw);
+            place(row, col, value);
         }
     }
     if (keyCode === 88 || keyCode === 8 || keyCode === 46) {
         if (current_cell !== undefined) {
             const [row, col] = current_cell;
-            httpPost("api/place", "json", {
-                row: row,
-                col: col,
-                value: 0,
-            }, draw);
+            place(row, col, 0);
         }
     }// x
     if (keyCode === 82) {
-        httpPost("api/reset", "json", {}, draw);
+        reset();
     }// r
     draw();
 }
