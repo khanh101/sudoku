@@ -26,10 +26,10 @@ class Game:
         self.app.config["DEBUG"] = True
 
 
-        self.app.route("/game/<path:path>", methods=["GET"])(self.serve_static)
+        self.app.route("/<path:path>", methods=["GET"])(self.serve_static)
         self.app.route("/api/new_board", methods=["POST"])(self.new_board)
-        self.app.route("/api/place", methods=["PUT"])(self.place)
-        self.app.route("/api/reset", methods=["PUT"])(self.reset)
+        self.app.route("/api/place", methods=["POST"])(self.place)
+        self.app.route("/api/reset", methods=["POST"])(self.reset)
         self.app.route("/api/view", methods=["GET"])(self.view)
 
     def serve_static(self, path):

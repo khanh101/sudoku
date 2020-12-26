@@ -52,7 +52,7 @@ class Game:
         current_cell = None
         while state != State.QUIT:
             # view
-            self.screen.fill((255, 255, 255))
+            self.screen.fill((200, 200, 200))
             if state == State.WAITING:
                 self.screen.blit(*self._blit_waiting())
                 self.screen.blit(*self._blit_panel(self.waiting_panel_surf))
