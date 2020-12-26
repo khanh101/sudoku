@@ -147,7 +147,7 @@ def implication_once(board: np.ndarray) -> Optional[tuple[int, int, int]]:
         return 0
 
     formula = board_to_formula(board)
-    truth = np.zeros(shape=(1 + 9 * 9 * 9), dtype=int)
+    truth = np.zeros(shape=(1 + 9 * 9 * 9), dtype=int) # -1: false, 0: unknown, +1: true
     # assign to all truth value
     for conj in formula:
         if len(conj) == 1:
@@ -162,9 +162,11 @@ def implication_once(board: np.ndarray) -> Optional[tuple[int, int, int]]:
     # implication
     for conj in formula:
         var01 = [var for var in conj if sign(var) * truth[abs(var)] != -1]
-        val01 = [sign(var) * truth[abs(var)] for var in conj if sign(var) * truth[abs(var)] != -1]
+        val01 = [sign(var) * truth[abs(var)] for var in var01]
         if 1 in val01:
             continue  # sat
-        if len(var01) == 1 and var01[0] > 0:
-            return var2pos(var01[0])  # implication
+        if len(var01) == 1:
+            print(var01[0])
+            if var01[0] > 0:
+                return var2pos(var01[0])  # implication
     return None
