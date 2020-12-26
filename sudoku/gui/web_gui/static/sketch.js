@@ -57,6 +57,9 @@ function update_board() {
         initial_board = viewResponse.initial_board;
         current_board = viewResponse.current_board;
         state = STATE_PLAYING;
+        if (youwin) {
+            state = STATE_ENDED;
+        }
         draw();
     });
 }
@@ -73,6 +76,8 @@ function draw() {
             image(playing_panel_img, 0, 9 * cell_size);
             break;
         case STATE_ENDED:
+            draw_board();
+            image(youwin_panel_img, 0, 9 * cell_size);
             break;
     }
 }
