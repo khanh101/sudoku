@@ -81,7 +81,7 @@ function reset() {
 }
 
 function draw() {
-    background(200, 200, 200);
+    background(230, 230, 230);
     switch (state) {
         case STATE_WAITING:
             draw_panel_waiting();
