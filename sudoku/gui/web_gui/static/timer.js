@@ -1,7 +1,18 @@
 let start_time = undefined;
 
+function hms_to_string(hour, min, sec) {
+    function num_to_string(num) {
+        if (num < 10) {
+            return `0${num}`;
+        } else {
+            return `${num}`
+        }
+    }
+    return num_to_string(hour) + ":" + num_to_string(min) + ":" + num_to_string(sec)
+}
+
 function time_to_string(time) {
-    return `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`;
+    return hms_to_string(time.getHours(), time.getMinutes(), time.getSeconds());
 }
 
 function milliseconds_to_string(milliseconds) {
@@ -10,7 +21,7 @@ function milliseconds_to_string(milliseconds) {
     const minutes = Math.floor(seconds / 60);
     const min = minutes % 60;
     const hours = Math.floor(minutes / 60);
-    return `${hours}:${min}:${sec}`
+    return hms_to_string(hours, min, sec);
 }
 
 function write_timer() {
