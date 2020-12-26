@@ -33,7 +33,8 @@ let state = STATE_WAITING;
 function setup() {
     noLoop();
     let canvas = createCanvas(9 * cell_size, 11 * cell_size);
-    canvas.position(screen_width - pad - 9 * cell_size, pad);
+    // canvas.position(screen_width - pad - 9 * cell_size, pad);
+    canvas.parent("p5canvas");
     waiting_panel_img.resize(9 * cell_size, 2 * cell_size);
     waiting_img.resize(9 * cell_size, 9 * cell_size);
     playing_panel_img.resize(9 * cell_size, 2 * cell_size);
