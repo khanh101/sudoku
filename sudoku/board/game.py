@@ -7,7 +7,7 @@ from sudoku.board.solver import solve_all, implication_once
 
 
 
-class ImplicationView:
+class PlacementView:
     row: int
     col: int
     value: int
@@ -34,19 +34,21 @@ class Game:
     current_board: np.ndarray
     solution_board: np.ndarray
     initial_mask: np.ndarray
+    stack: list[tuple[int, int, int]] # row col value
 
     def __init__(self, seed: int):
         self.current_board = 1 + generate(seed)
         self.solution_board = 1 + next(solve_all(self.current_board - 1))
         self.initial_mask = self.current_board.astype(bool)
+        self.stack = []
         print(self.solution_board)
 
-    def implication(self) -> Optional[ImplicationView]:
+    def implication(self) -> Optional[PlacementView]:
         implication = implication_once(self.current_board - 1)
         if implication is None:
             return None
         row, col, value = implication
-        view = ImplicationView()
+        view = PlacementView()
         view.row = row
         view.col = col
         view.value = value + 1
@@ -60,13 +62,24 @@ class Game:
         view.violation_mask = Game._get_violation_mask(self.current_board)
         return view
 
-    def place(self, cell: tuple[int, int], value: int = 0):
-        row, col = cell
+    def place(self, row: int, col: int, value: int = 0):
         if self.initial_mask[row, col] == 0:
             self.current_board[row, col] = value
+            if value != 0:
+                self.stack.append((row, col, value))
 
-    def reset(self):
-        self.current_board[~self.initial_mask] = 0
+    def undo(self) -> Optional[PlacementView]:
+        if len(self.stack) == 0:
+            return None
+        row, col, value = self.stack[-1]
+        self.current_board[row, col] = 0
+        self.stack.pop()
+        view = PlacementView()
+        view.row = row
+        view.col = col
+        view.value = value
+        return view
+
 
     @staticmethod
     def _get_violation_cell(cell: tuple[int, int]) -> Iterator[tuple[int, int]]:

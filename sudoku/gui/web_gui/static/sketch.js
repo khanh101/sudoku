@@ -77,8 +77,17 @@ function place(row, col, value) {
     }, update_board);
 }
 
-function reset() {
-    httpPost("api/reset", "json", {}, update_board);
+function undo() {
+    httpPost("api/undo", "json", {}, function (response) {
+        if (response === null) {
+            document.getElementById("undo").textContent = `undo: could not undo`;
+            return;
+        }
+        const {row, col, value} = response;
+        current_cell = [row, col]
+        place(row, col, 0);
+        document.getElementById("undo").textContent = `undo: found {row: ${row}, col: ${col}, value ${value}}`;
+    });
 }
 
 function implication() {
@@ -234,8 +243,8 @@ function keyPressed() {
             place(row, col, 0);
         }
     }// x
-    if (keyCode === 82) {
-        reset();
+    if (keyCode === 85) {
+        undo();
     }// r
     if (keyCode == 72) {
         implication();

@@ -21,7 +21,7 @@ class Game:
         self.app.route("/api/view", methods=["GET"])(self.view)
         self.app.route("/api/new", methods=["POST"])(self.new)
         self.app.route("/api/place", methods=["POST"])(self.place)
-        self.app.route("/api/reset", methods=["POST"])(self.reset)
+        self.app.route("/api/undo", methods=["POST"])(self.undo)
         self.app.route("/api/implication", methods=["GET"])(self.implication)
 
     def serve_static(self, path):
@@ -73,16 +73,19 @@ class Game:
             body = request.json
             row, col = body["row"], body["col"]
             value = body.get("value", 0)
-            self.board_game.place((row, col), value)
+            self.board_game.place(row, col, value)
             return jsonify()
         except Exception:
             return jsonify(), 400
 
-    def reset(self):
+    def undo(self):
         if self.board_game is None:
             return jsonify(), 400
-        self.board_game.reset()
-        return jsonify()
+        undo = self.board_game.undo()
+        if undo is None:
+            return jsonify(None)
+        return jsonify(undo.marshal())
+
 
     def run(self, *args, **kwargs):
         self.app.run(*args, **kwargs)
