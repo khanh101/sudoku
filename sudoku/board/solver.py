@@ -38,8 +38,8 @@ def solve_all(board: np.ndarray) -> Iterator[np.ndarray]:
         yield solution
 
 
-def board_to_formula(board: np.ndarray, excluded: Optional[list[np.ndarray]] = None) -> CNF:
-    formula = CNF()
+def board_to_formula(board: np.ndarray, excluded: Optional[list[np.ndarray]] = None) -> list[list[int]]:
+    formula: list[list[int]] = []
 
     def add_unique_active_clause(pos_list: list[Pos]):
         var_list = [pos2var(pos) for pos in pos_list]
