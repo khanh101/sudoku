@@ -40,6 +40,13 @@ class Game:
         return jsonify()
 
     def place(self):
+        '''
+        {
+            "row": 1,
+            "col": 2,
+            "value": 3,
+        }
+        '''
         try:
             body = request.json
             row, col = body["row"], body["col"]
@@ -54,7 +61,20 @@ class Game:
         return jsonify()
 
     def view(self):
-        return jsonify(to_jsonifiable(self.board_game.view()))
+        '''
+        :return:
+        {
+            "youwin": int (0, 1),
+            "initial_board": (list of list),
+            "current_board": (list of list),
+        }
+        '''
+        youwin, initial_board, current_board = to_jsonifiable(self.board_game.view())
+        return jsonify({
+            "youwin": youwin,
+            "initial_board": initial_board,
+            "current_board": current_board,
+        })
 
     def run(self):
         self.app.run()
