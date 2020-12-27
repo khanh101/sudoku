@@ -8,10 +8,12 @@ class Session:
         self.pool: dict[int, tuple[float, Any]] = {}
         self.running = mp.Value("b", True, lock=True)
         self.process = mp.Process(target=self._loop)
+        self.process.start()
 
     def __del__(self):
         with self.running.get_lock():
             self.running.value = False
+        self.process.join()
     def _loop(self):
         while True:
             with self.running.get_lock():
