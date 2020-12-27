@@ -212,8 +212,11 @@ function cell_to_pos_tl(row, col) {
 }
 
 function keyPressed() {
-    function key_to_value(key) {
+    function number_to_value(key) {
         return key - 48;
+    }
+    function numpad_to_value(key) {
+        return key - 96;
     }
     if (keyCode === LEFT_ARROW) {
         if (current_cell !== null) {
@@ -244,11 +247,19 @@ function keyPressed() {
         }
     }
     if (48 <= keyCode && keyCode < 58) {
-        const value = key_to_value(keyCode);
+        const value = number_to_value(keyCode);
         if (current_cell !== null) {
             const [row, col] = current_cell;
             place(row, col, value);
         }
+    }
+    if (96 <= keyCode && keyCode < 106) {
+        const value = numpad_to_value(keyCode);
+        if (current_cell !== null) {
+            const [row, col] = current_cell;
+            place(row, col, value);
+        }
+
     }
     if (keyCode === 88 || keyCode === 8 || keyCode === 46) {
         if (current_cell !== null) {
