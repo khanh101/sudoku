@@ -26,6 +26,7 @@ class Session:
         print(f"set key: {key}, number of active users {len(self.pool)}")
 
     def get(self, key: int) -> Any:
+        self._eliminate_inactive_user()
         print(f"get key {key}")
         data = self.pool[key][1]
         self.pool[key] = (time.time(), data)
