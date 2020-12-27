@@ -1,5 +1,5 @@
 let start_time = undefined;
-
+let total_time = undefined;
 function hms_to_string(hour, min, sec) {
     function num_to_string(num) {
         if (num < 10) {
@@ -26,11 +26,14 @@ function milliseconds_to_string(milliseconds) {
 
 function write_timer() {
     const current_time = new Date();
+    if (youwin !== true) {
+        total_time = current_time - start_time;
+    }
     let timer = document.getElementById("timer");
     timer.innerHTML = "";
     timer.innerHTML += `start time: ${time_to_string(start_time)}` + "<br>";
     timer.innerHTML += `current time: ${time_to_string(current_time)}` + "<br>";
-    timer.innerHTML += `elapsed time: ${milliseconds_to_string(current_time - start_time)}` + "<br>";
+    timer.innerHTML += `elapsed time: ${milliseconds_to_string(total_time)}` + "<br>";
     setTimeout(write_timer, 1000);
 }
 

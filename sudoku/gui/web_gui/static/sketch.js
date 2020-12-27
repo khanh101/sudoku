@@ -65,7 +65,9 @@ function update_board() {
     httpPost("api/view", "json", {
         key: key,
     }, function (response) {
-        youwin = response.youwin;
+        if (youwin !== true) {
+            youwin = response.youwin;
+        }
         current_board = response.current_board;
         initial_mask = response.initial_mask;
         violation_mask = response.violation_mask;
