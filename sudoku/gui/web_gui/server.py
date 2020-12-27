@@ -38,12 +38,12 @@ class Game:
         self.app.route("/api/undo", methods=["POST"])(self.undo)
         self.app.route("/api/implication", methods=["POST"])(self.implication)
         self.app.route("/api/access", methods=["POST"])(self.access)
-        self.app.route("/api/stats", methods=["GET"])(self.stats)
+        self.app.route("/api/global_stats", methods=["GET"])(self.global_stats)
 
     def serve_static(self, path):
         return send_from_directory("./static/", path)
 
-    def stats(self):
+    def global_stats(self):
         self.stats.number_of_active_board = len(self.session.pool)
         return jsonify(self.stats.marshal())
 
