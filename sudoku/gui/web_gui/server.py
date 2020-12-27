@@ -1,6 +1,4 @@
 import time
-from typing import Optional
-
 import flask
 from flask import request, jsonify, send_from_directory
 
@@ -28,7 +26,7 @@ class Game:
         self.stats.number_of_active_board = 0
 
         self.app = flask.Flask(__name__)
-        self.app.config["DEBUG"] = True
+        self.app.config["DEBUG"] = False
 
 
         self.app.route("/<path:path>", methods=["GET"])(self.serve_static)
@@ -44,7 +42,7 @@ class Game:
         return send_from_directory("./static/", path)
 
     def global_stats(self):
-        self.stats.number_of_active_board = len(self.session.pool)
+        self.stats.number_of_active_board = self.session.number_of_active_user()
         return jsonify(self.stats.marshal())
 
     def access(self):
@@ -58,6 +56,7 @@ class Game:
 
 
     def new(self):
+        self.stats.number_of_new_board += 1
         key = int(time.time() + random.randrange(0, 2**32)) % 2**32
         self.session.set(key, board.Game(key))
         return jsonify({
