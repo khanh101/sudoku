@@ -23,9 +23,20 @@ class Game:
         self.app.route("/api/place", methods=["POST"])(self.place)
         self.app.route("/api/undo", methods=["POST"])(self.undo)
         self.app.route("/api/implication", methods=["POST"])(self.implication)
+        self.app.route("/api/access", methods=["POST"])(self.access)
 
     def serve_static(self, path):
         return send_from_directory("./static/", path)
+
+    def access(self):
+        try:
+            body = request.json
+            key = body["key"]
+            board_game = self.session.get(key)
+            return jsonify(None)
+        except Exception:
+            return jsonify(), 400
+
 
     def new(self):
         key = int(time.time() + random.randrange(0, 2**32)) % 2**32
