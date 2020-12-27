@@ -2,12 +2,10 @@ package sudoku
 
 import "github.com/khanhhhh/sudoku/sat"
 
-var baseCNF = make(map[Size]sat.CNF)
-var v2p = make(map[Size]map[v]p)
-var p2v = make(map[Size]map[p]v)
+var baseCNF = make(map[int]sat.CNF)
+var v2p = make(map[int]map[v]p)
+var p2v = make(map[int]map[p]v)
 
-// Size : board size
-type Size = int
 type v = int
 type p struct {
 	row int
@@ -16,7 +14,7 @@ type p struct {
 }
 
 // ReduceBase :
-func ReduceBase(n Size) sat.CNF {
+func ReduceBase(n int) sat.CNF {
 	base, ok := baseCNF[n]
 	if !ok {
 		// baseCNF
@@ -49,12 +47,11 @@ func ReduceBase(n Size) sat.CNF {
 				vList[i] = p2v[n][pi]
 			}
 			// at least 1 variable is active
-			base.AddClause(vList)
+			base = append(base, vList)
 			// no pair active at the same time
-			base = base.AddClause(vList)
 			for i1 := range vList {
 				for i2 := i1 + 1; i2 < len(vList); i2++ {
-					base = base.AddClause([]int{-vList[i1], -vList[i2]})
+					base = append(base, []sat.Literal{-vList[i1], -vList[i2]})
 				}
 			}
 		}
@@ -125,7 +122,7 @@ func ReduceBase(n Size) sat.CNF {
 }
 
 // Reduce :
-func Reduce(n Size, board Board, excludedList []Board) sat.CNF {
+func Reduce(n int, board Board, excludedList []Board) sat.CNF {
 	formula := ReduceBase(n).Copy()
 	addAllActiveClause := func(pList []p) {
 		vList := make([]v, len(pList))
@@ -133,7 +130,7 @@ func Reduce(n Size, board Board, excludedList []Board) sat.CNF {
 			vList[i] = p2v[n][pi]
 		}
 		for _, vi := range vList {
-			formula = formula.AddClause([]int{vi})
+			formula = append(formula, []sat.Literal{vi})
 		}
 	}
 	addNotAllActiveClause := func(pList []p) {
@@ -141,11 +138,11 @@ func Reduce(n Size, board Board, excludedList []Board) sat.CNF {
 		for i, pi := range pList {
 			vList[i] = p2v[n][pi]
 		}
-		lList := make([]int, 0, len(vList))
+		lList := make([]sat.Literal, 0, len(vList))
 		for _, vi := range vList {
 			lList = append(lList, -vi)
 		}
-		formula = formula.AddClause(lList)
+		formula = append(formula, lList)
 	}
 	// add board
 	pList := make([]p, 0)

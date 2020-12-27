@@ -19,13 +19,8 @@ func printBoard(board sudoku.Board) {
 }
 
 func main() {
-	board := sudoku.NewBoard(3)
-	board[0][0] = 1
-	result := sudoku.SolveAll(3, board)
-	for {
-		sat, board := result.Next()
-		if sat {
-			printBoard(board)
-		}
-	}
+	g := sudoku.NewGame(3, 1234)
+	ok, view := g.Implication()
+	fmt.Println(ok, view)
+	return
 }

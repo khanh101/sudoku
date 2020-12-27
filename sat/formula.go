@@ -1,7 +1,10 @@
 package sat
 
+// Literal :
+type Literal = int
+
 // Clause :
-type Clause []int
+type Clause []Literal
 
 // CNF :
 type CNF []Clause
@@ -9,11 +12,6 @@ type CNF []Clause
 // NewCNF :
 func NewCNF() CNF {
 	return make([]Clause, 0)
-}
-
-// AddClause :
-func (cnf CNF) AddClause(clause []int) CNF {
-	return append(cnf, clause)
 }
 
 // Copy :
