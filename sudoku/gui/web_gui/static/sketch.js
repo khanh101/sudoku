@@ -29,7 +29,7 @@ function preload() {
 const STATE_WAITING = 0;
 const STATE_PLAYING = 1;
 let state = STATE_WAITING;
-
+let key = null;
 function setup() {
     noLoop();
     let canvas = createCanvas(9 * cell_size, 11 * cell_size);
@@ -47,7 +47,10 @@ function setup() {
     }
     youwin_panel_img.resize(9 * cell_size, 2 * cell_size);
 
-    httpPost("api/new", "json", {}, update_board);
+    httpPost("api/new", "json", {}, function(response) {
+        key = response.key;
+        update_board();
+    });
     draw();
 }
 
@@ -59,7 +62,9 @@ let initial_mask = null;
 let violation_mask = null;
 
 function update_board() {
-    httpGet("api/view", "json", function (response) {
+    httpPost("api/view", "json", {
+        key: key,
+    }, function (response) {
         youwin = response.youwin;
         current_board = response.current_board;
         initial_mask = response.initial_mask;
@@ -71,6 +76,7 @@ function update_board() {
 
 function place(row, col, value) {
     httpPost("api/place", "json", {
+        key: key,
         row: row,
         col: col,
         value: value,
@@ -78,7 +84,9 @@ function place(row, col, value) {
 }
 
 function undo() {
-    httpPost("api/undo", "json", {}, function (response) {
+    httpPost("api/undo", "json", {
+        key: key,
+    }, function (response) {
         if (response === null) {
             document.getElementById("undo").textContent = `undo: could not undo`;
             return;
@@ -91,7 +99,9 @@ function undo() {
 }
 
 function implication() {
-    httpGet("api/implication", "json", function (response) {
+    httpPost("api/implication", "json", {
+        key: key,
+    }, function (response) {
         if (response === null) {
             document.getElementById("implication").textContent = `implication: could not find`;
             return;
