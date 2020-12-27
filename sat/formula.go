@@ -1,23 +1,23 @@
-package cnf
+package sat
 
 // Clause :
 type Clause []int
 
-// Formula :
-type Formula []Clause
+// CNF :
+type CNF []Clause
 
-// New :
-func New() Formula {
+// NewCNF :
+func NewCNF() CNF {
 	return make([]Clause, 0)
 }
 
 // AddClause :
-func (cnf Formula) AddClause(clause []int) Formula {
+func (cnf CNF) AddClause(clause []int) CNF {
 	return append(cnf, clause)
 }
 
 // Copy :
-func (cnf Formula) Copy() Formula {
+func (cnf CNF) Copy() CNF {
 	out := make([]Clause, len(cnf))
 	for ic, c := range cnf {
 		out[ic] = make([]int, len(c))

@@ -1,9 +1,8 @@
-package satsolver
+package sat
 
 import (
 	"github.com/irifrance/gini"
 	"github.com/irifrance/gini/z"
-	"github.com/khanhhhh/sudoku/cnf"
 )
 
 func abs(value int) int {
@@ -14,7 +13,7 @@ func abs(value int) int {
 }
 
 // SolveOnce :
-func SolveOnce(cnf cnf.Formula) (sat bool, assignment map[int]bool) {
+func SolveOnce(cnf CNF) (satisfiable bool, assignment map[int]bool) {
 	numClause := len(cnf)
 	var2zVar := make(map[int]z.Var)
 	counter := z.Var(0)
@@ -40,12 +39,12 @@ func SolveOnce(cnf cnf.Formula) (sat bool, assignment map[int]bool) {
 		}
 		g.Add(0)
 	}
-	sat = (g.Solve() == 1)
-	if sat {
+	satisfiable = (g.Solve() == 1)
+	if satisfiable {
 		assignment = make(map[int]bool)
 		for v, zVar := range var2zVar {
 			assignment[v] = g.Value(zVar.Pos())
 		}
 	}
-	return sat, assignment
+	return satisfiable, assignment
 }

@@ -1,6 +1,4 @@
-package sudokusolver
-
-import "strconv"
+package sudoku
 
 // Board :
 type Board [][]int
@@ -20,18 +18,6 @@ func (board Board) Copy() Board {
 	for r, row := range board {
 		out[r] = make([]int, len(row))
 		copy(out[r], row)
-	}
-	return out
-}
-
-// ToString :
-func (board Board) ToString() string {
-	out := ""
-	for _, row := range board {
-		for _, val := range row {
-			out += strconv.Itoa(val) + " "
-		}
-		out += "\n"
 	}
 	return out
 }

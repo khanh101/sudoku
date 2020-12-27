@@ -1,8 +1,8 @@
-package sudokusolver
+package sudoku
 
-import "github.com/khanhhhh/sudoku/cnf"
+import "github.com/khanhhhh/sudoku/sat"
 
-var baseCNF = make(map[Size]cnf.Formula)
+var baseCNF = make(map[Size]sat.CNF)
 var v2p = make(map[Size]map[v]p)
 var p2v = make(map[Size]map[p]v)
 
@@ -16,11 +16,11 @@ type p struct {
 }
 
 // ReduceBase :
-func ReduceBase(n Size) cnf.Formula {
+func ReduceBase(n Size) sat.CNF {
 	base, ok := baseCNF[n]
 	if !ok {
 		// baseCNF
-		base = cnf.New()
+		base = sat.NewCNF()
 		// var2pos - pos2var
 		v2p[n] = make(map[v]p)
 		p2v[n] = make(map[p]v)
@@ -45,10 +45,11 @@ func ReduceBase(n Size) cnf.Formula {
 		// add contrainsts
 		addUniqueActiveClause := func(pList []p) {
 			vList := make([]v, len(pList))
-			// at least 1 variable is active
 			for i, pi := range pList {
 				vList[i] = p2v[n][pi]
 			}
+			// at least 1 variable is active
+			base.AddClause(vList)
 			// no pair active at the same time
 			base = base.AddClause(vList)
 			for i1 := range vList {
@@ -124,21 +125,27 @@ func ReduceBase(n Size) cnf.Formula {
 }
 
 // Reduce :
-func Reduce(n Size, board Board, excludedList []Board) cnf.Formula {
+func Reduce(n Size, board Board, excludedList []Board) sat.CNF {
 	formula := ReduceBase(n).Copy()
 	addAllActiveClause := func(pList []p) {
 		vList := make([]v, len(pList))
+		for i, pi := range pList {
+			vList[i] = p2v[n][pi]
+		}
 		for _, vi := range vList {
-			formula.AddClause([]int{vi})
+			formula = formula.AddClause([]int{vi})
 		}
 	}
 	addNotAllActiveClause := func(pList []p) {
 		vList := make([]v, len(pList))
+		for i, pi := range pList {
+			vList[i] = p2v[n][pi]
+		}
 		lList := make([]int, 0, len(vList))
 		for _, vi := range vList {
 			lList = append(lList, -vi)
 		}
-		formula.AddClause(lList)
+		formula = formula.AddClause(lList)
 	}
 	// add board
 	pList := make([]p, 0)
