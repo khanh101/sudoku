@@ -3,7 +3,7 @@ from typing import Any
 import multiprocessing as mp
 
 class Session:
-    def __init__(self, timeout: int=3600):
+    def __init__(self, timeout: int=60):
         self.timeout = timeout
         self.pool: dict[int, tuple[float, Any]] = {}
         self.running = mp.Value("b", True, lock=True)

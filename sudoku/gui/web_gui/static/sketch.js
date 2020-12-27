@@ -49,6 +49,7 @@ function setup() {
 
     httpPost("api/new", "json", {}, function(response) {
         key = response.key;
+        access();
         update_board();
     });
     draw();
