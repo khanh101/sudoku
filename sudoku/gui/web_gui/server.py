@@ -8,11 +8,25 @@ from sudoku import board
 from sudoku.gui.web_gui.session import Session
 import random
 
+class StatsView:
+    number_of_active_board: int
+    number_of_new_board: int
+    def marshal(self) -> dict[str]:
+        return {
+            "number_of_active_board": self.number_of_active_board,
+            "number_of_new_board": self.number_of_new_board,
+        }
+
 class Game:
     session: Session
-
+    app: flask.Flask
+    stats: StatsView
     def __init__(self):
         self.session = Session()
+        self.stats = StatsView()
+        self.stats.number_of_new_board = 0
+        self.stats.number_of_active_board = 0
+
         self.app = flask.Flask(__name__)
         self.app.config["DEBUG"] = True
 
@@ -24,9 +38,14 @@ class Game:
         self.app.route("/api/undo", methods=["POST"])(self.undo)
         self.app.route("/api/implication", methods=["POST"])(self.implication)
         self.app.route("/api/access", methods=["POST"])(self.access)
+        self.app.route("/api/stats", methods=["GET"])(self.stats)
 
     def serve_static(self, path):
         return send_from_directory("./static/", path)
+
+    def stats(self):
+        self.stats.number_of_active_board = len(self.session.pool)
+        return jsonify(self.stats.marshal())
 
     def access(self):
         try:
