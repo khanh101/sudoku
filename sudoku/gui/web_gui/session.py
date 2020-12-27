@@ -21,16 +21,19 @@ class Session:
                     if time.time() - last_access > self.timeout:
                         print(f"del key {key}")
                         self.pool.pop(key)
+                        print(f"number of active users: {len(self.pool)}")
             time.sleep(self.timeout)
 
     def set(self, key: int, data: Any):
-        print(f"set key {key}")
         with self.running.get_lock():
+            print(f"set key {key}")
             self.pool[key] = (time.time(), data)
+            print(f"number of active users: {len(self.pool)}")
 
     def get(self, key: int) -> Any:
-        print(f"get key {key}")
         with self.running.get_lock():
+            print(f"get key {key}")
             data = self.pool[key][1]
             self.pool[key] = (time.time(), data)
+            print(f"number of active users: {len(self.pool)}")
             return data
