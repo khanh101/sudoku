@@ -32,10 +32,10 @@ func (s *server) Run(addr string) {
 				return
 			}
 		}
-		key.Key = strconv.Itoa(rand.Int())
 		intKey, err := strconv.Atoi(key.Key)
 		if err != nil {
-			panic("wrong")
+			intKey = rand.Int()
+			key.Key = strconv.Itoa(intKey)
 		}
 		s.s.set(key.Key, sudoku.NewGame(N, intKey))
 		c.JSON(http.StatusOK, key)
@@ -133,8 +133,10 @@ func (s *server) Run(addr string) {
 		}
 		s.s.get(key.Key)
 	})
-	s.r.POST("/api/stats", func(c *gin.Context) {
-
+	s.r.POST("/api/global_stats", func(c *gin.Context) {
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"number of active users": s.s.numActiveKey(),
+		})
 	})
 	s.r.Run(addr)
 }

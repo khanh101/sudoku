@@ -47,11 +47,6 @@ function setup() {
     }
     youwin_panel_img.resize(9 * cell_size, 2 * cell_size);
 
-    httpPost("api/new", "json", {}, function(response) {
-        key = response.key;
-        access();
-        update_board();
-    });
     draw();
 }
 
@@ -61,6 +56,28 @@ let youwin = null;
 let current_board = null;
 let initial_mask = null;
 let violation_mask = null;
+
+function login() {
+    const textkey = document.getElementById("key");
+    const text = textkey.value;
+    if (text === "random") {
+        httpPost("api/new", "json", {}, function(response) {
+            key = response.key;
+            textkey.value = key;
+            access();
+            update_board();
+        });
+    } else {
+        httpPost("api/new", "json", {
+            key: text,
+        }, function(response) {
+            key = response.key;
+            access();
+            update_board();
+        });
+    }
+    
+}
 
 function update_board() {
     httpPost("api/view", "json", {
