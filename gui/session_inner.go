@@ -54,10 +54,10 @@ func (s *session) get(key string) interface{} {
 	s.mtx.RLock()
 	defer s.mtx.RUnlock()
 	e, ok := s.pool[key]
-	e.lastAccess = time.Now()
 	if !ok {
 		return nil
 	}
+	e.lastAccess = time.Now()
 	return e.data
 }
 
