@@ -83,7 +83,7 @@ function login() {
 }
 
 function get_current_board_string() {
-    out = "board: ";
+    out = "";
     for (let rowid=0; rowid<9; rowid++) {
         for (let colid=0; colid<9; colid++) {
             out += current_board[rowid][colid];
@@ -103,7 +103,7 @@ function update_board() {
         initial_mask = response.initial_mask;
         violation_mask = response.violation_mask;
         state = STATE_PLAYING;
-        document.getElementById("board").textContent = get_current_board_string();
+        document.getElementById("board").value = get_current_board_string();
         draw();
     });
 }
