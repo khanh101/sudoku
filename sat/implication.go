@@ -1,7 +1,14 @@
 package sat
 
+// Explanation :
+type Explanation map[Literal]int
+
 // Implication :
-func Implication(formula CNF, bootstrap Assignment) (unsatisfiable bool, assignment Assignment) {
+func Implication(formula CNF, bootstrap Assignment, explain bool) (unsatisfiable bool, assignment Assignment, explanation Explanation) {
+	if explain {
+		explanation = make(Explanation)
+	}
+
 	numVar := formula.NumVar()
 	assignment = NewAssignment(numVar)
 	for i, v := range bootstrap {
@@ -34,11 +41,11 @@ func Implication(formula CNF, bootstrap Assignment) (unsatisfiable bool, assignm
 
 	for {
 		unitprop := false
-		for _, clause := range formula {
+		for idx, clause := range formula {
 			value, numZero, firstZeroIdx := clauseValue(clause)
 			if value == ValueFalse {
 				unsatisfiable = true
-				return unsatisfiable, assignment
+				return unsatisfiable, assignment, explanation
 			}
 			if value == ValueTrue {
 				continue
@@ -47,6 +54,9 @@ func Implication(formula CNF, bootstrap Assignment) (unsatisfiable bool, assignm
 				activateLiteral := clause[firstZeroIdx]
 				assignment[abs(activateLiteral)] = sign(activateLiteral)
 				unitprop = true
+				if explain {
+					explanation[activateLiteral] = idx
+				}
 			}
 		}
 		if !unitprop {
@@ -54,5 +64,5 @@ func Implication(formula CNF, bootstrap Assignment) (unsatisfiable bool, assignm
 		}
 	}
 	unsatisfiable = false
-	return unsatisfiable, assignment
+	return unsatisfiable, assignment, explanation
 }

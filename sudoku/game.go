@@ -5,7 +5,7 @@ type Game interface {
 	View() GameView
 	Place(PlacementView)
 	Undo() (bool, PlacementView)
-	Implication() (bool, PlacementView)
+	Implication() (bool, ImplicationView)
 }
 
 // GameView :
@@ -21,6 +21,14 @@ type PlacementView struct {
 	Row int `json:"row"`
 	Col int `json:"col"`
 	Val int `json:"value"`
+}
+
+// ImplicationView :
+type ImplicationView struct {
+	Row int    `json:"row"`
+	Col int    `json:"col"`
+	Val int    `json:"value"`
+	Exp string `json:"explanation"`
 }
 
 // NewGame :

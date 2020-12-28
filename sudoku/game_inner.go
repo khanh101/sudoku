@@ -1,6 +1,7 @@
 package sudoku
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/khanhhhh/sudoku/sat"
@@ -94,11 +95,11 @@ func (g *game) getViolation() [][]bool {
 	return violation
 }
 
-func (g *game) Implication() (ok bool, view PlacementView) {
+func (g *game) Implication() (ok bool, view ImplicationView) {
 	g.mtx.RLock()
 	defer g.mtx.RUnlock()
 	formula := Reduce(g.n, g.current, nil)
-	unsat, assignment := sat.Implication(formula, nil)
+	unsat, assignment, explanation := sat.Implication(formula, nil, true)
 	if unsat {
 		ok = false
 		return ok, view
@@ -111,13 +112,60 @@ func (g *game) Implication() (ok bool, view PlacementView) {
 				view.Row = pi.row
 				view.Col = pi.col
 				view.Val = pi.val
+				// generate explanation
+				findLeaf := func(root sat.Literal) []sat.Literal {
+					leaf := make([]sat.Literal, 0)
+					stack := []sat.Literal{vi}
+					visited := make(map[sat.Literal]struct{})
+					var lcurrent sat.Literal
+
+					for len(stack) > 0 {
+						lcurrent, stack = stack[len(stack)-1], stack[:len(stack)-1]
+						visited[lcurrent] = struct{}{}
+						clauseIdx := explanation[lcurrent]
+						if len(formula[clauseIdx]) == 1 { // leaf
+							leaf = append(leaf, lcurrent)
+						}
+						for _, child := range formula[clauseIdx] {
+							if child == lcurrent {
+								continue
+							}
+							if _, ok := visited[-child]; !ok {
+								stack = append(stack, -child)
+							}
+						}
+					}
+					return leaf
+				}
+				literalToString := func(literal sat.Literal) string {
+					variable := abs(literal)
+					pos := v2p[g.n][variable]
+					out := ""
+					if literal > 0 {
+						out += fmt.Sprintf(
+							"(%d) {row %d, col %d, val %d}",
+							variable, pos.row, pos.col, pos.val,
+						)
+					} else {
+						out += fmt.Sprintf(
+							"(%d) not {row %d, col %d, val %d}",
+							variable, pos.row, pos.col, pos.val,
+						)
+					}
+					return out
+				}
+				leaf := findLeaf(vi)
+				view.Exp = "because of "
+				for _, l := range leaf {
+					view.Exp += literalToString(l) + ", "
+				}
 				return ok, view
 			}
 
 		}
 	}
 	ok = false
-	return ok, PlacementView{}
+	return ok, view
 }
 
 func (g *game) Undo() (ok bool, view PlacementView) {
@@ -140,4 +188,14 @@ func (g *game) Place(p PlacementView) {
 			g.stack = append(g.stack, p)
 		}
 	}
+}
+
+func abs(x int) int {
+	if x > 0 {
+		return +x
+	}
+	if x < 0 {
+		return -x
+	}
+	return 0
 }

@@ -128,6 +128,7 @@ function implication() {
         current_cell = [row, col]
         place(row, col, value);
         document.getElementById("implication").textContent = `implication: found {row: ${row}, col: ${col}, value ${value}}`;
+        document.getElementById("implication").textContent += `\nexplanation: ${response.explanation}`;
     })
 
 }
