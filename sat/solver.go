@@ -5,45 +5,35 @@ import (
 	"github.com/irifrance/gini/z"
 )
 
-func abs(value int) int {
-	if value > 0 {
-		return value
-	}
-	return -value
-}
-
 // SolveOnce :
-func SolveOnce(cnf CNF) (satisfiable bool, assignment map[int]bool) {
-	numClause := len(cnf)
-	var2zVar := make(map[int]z.Var)
-	counter := z.Var(0)
-	for _, c := range cnf {
-		for _, v := range c {
-			_, ok := var2zVar[abs(v)]
-			if !ok {
-				counter++
-				var2zVar[abs(v)] = counter
-			}
-		}
+func SolveOnce(formula CNF) (satisfiable bool, assignment Assignment) {
+	var2zVar := func(v int) z.Var {
+		return z.Var(v)
 	}
-	numVar := int(counter)
+	numClause := formula.NumClause()
+	numVar := formula.NumVar()
 
 	g := gini.NewVc(numVar, numClause)
-	for _, c := range cnf {
+	for _, c := range formula {
 		for _, v := range c {
 			if v > 0 {
-				g.Add(var2zVar[v].Pos())
+				g.Add(var2zVar(v).Pos())
 			} else {
-				g.Add(var2zVar[-v].Neg())
+				g.Add(var2zVar(-v).Neg())
 			}
 		}
 		g.Add(0)
 	}
 	satisfiable = (g.Solve() == 1)
 	if satisfiable {
-		assignment = make(map[int]bool)
-		for v, zVar := range var2zVar {
-			assignment[v] = g.Value(zVar.Pos())
+		assignment = NewAssignment(numVar)
+		for v := range assignment {
+			zVar := var2zVar(v)
+			if g.Value(zVar.Pos()) {
+				assignment[v] = +1
+			} else {
+				assignment[v] = -1
+			}
 		}
 	}
 	return satisfiable, assignment

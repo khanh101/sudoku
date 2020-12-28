@@ -1,79 +1,58 @@
 package sat
 
 // Implication :
-func Implication(formulaIn CNF, assignmentIn map[int]bool) (unsatisfiable bool, formulaOut CNF, assignmentOut map[int]bool) {
-	assignmentOut = assignmentIn
-	formulaOut = formulaIn
-	abs := func(x int) int {
-		if x > 0 {
-			return +x
-		}
-		if x < 0 {
-			return -x
-		}
-		return 0
+func Implication(formula CNF, bootstrap Assignment) (unsatisfiable bool, assignment Assignment) {
+	numVar := formula.NumVar()
+	assignment = NewAssignment(numVar)
+	for i, v := range bootstrap {
+		assignment[i] = v
 	}
-	for {
-		better := false
-		// assign to all truth value
-		for _, clause := range formulaOut {
-			if len(clause) == 1 {
-				l := clause[0]
-				vi := abs(l)
-				if _, ok := assignmentOut[vi]; !ok {
-					assignmentOut[vi] = l > 0
-					better = true
+	literalValue := func(literal Literal) Value {
+		return assignment[abs(literal)] * sign(literal)
+	}
+	clauseValue := func(clause Clause) (Value, int, int) {
+		// 1 if clause is sat, -1 if clause is unsat, (0, numZero, firstZeroIdx) if there still chance
+		numZero := 0
+		firstZeroIdx := -1
+		for idx, literal := range clause {
+			v := literalValue(literal)
+			if v == ValueTrue {
+				return ValueTrue, 0, 0
+			}
+			if v == ValueUnknown {
+				numZero++
+				if firstZeroIdx == -1 {
+					firstZeroIdx = idx
 				}
 			}
 		}
-		// detect unsat and remove 1-clause
-		oneClauseIdx := make([]int, 0)
-		for cidx, clause := range formulaOut {
-			unsatisfiable = true
-			zeroLiteralIdx := make([]int, 0)
-			for lidx, l := range clause {
-				vi := abs(l)
-				val, ok := assignmentOut[vi]
-				// at least 1 unknown -> pass
-				if !ok {
-					unsatisfiable = false
-					break
-				}
-				// true -> remove from formulaOut
-				if l > 0 && val == true {
-					unsatisfiable = false
-					oneClauseIdx = append(oneClauseIdx, cidx)
-					break
-				}
-				// true -> remove from formulaOut
-				if l < 0 && val == false {
-					unsatisfiable = false
-					oneClauseIdx = append(oneClauseIdx, cidx)
-					break
-				}
-				// false -> remove from claus
-				zeroLiteralIdx = append(zeroLiteralIdx, lidx)
-			}
+		if numZero > 0 {
+			return ValueUnknown, numZero, firstZeroIdx
+		}
+		return ValueFalse, 0, 0
+	}
 
-			for i := len(zeroLiteralIdx) - 1; i >= 0; i-- {
-				lidx := zeroLiteralIdx[i]
-				formulaOut[cidx][lidx] = formulaOut[cidx][len(formulaOut[cidx])-1]
-				formulaOut[cidx] = formulaOut[cidx][:len(formulaOut[cidx])-1]
-				better = true
+	for {
+		unitprop := false
+		for _, clause := range formula {
+			value, numZero, firstZeroIdx := clauseValue(clause)
+			if value == ValueFalse {
+				unsatisfiable = true
+				return unsatisfiable, assignment
 			}
-			if unsatisfiable {
-				return unsatisfiable, formulaOut, assignmentOut
+			if value == ValueTrue {
+				continue
+			}
+			if value == ValueUnknown && numZero == 1 {
+				activateLiteral := clause[firstZeroIdx]
+				assignment[abs(activateLiteral)] = sign(activateLiteral)
+				unitprop = true
 			}
 		}
-		for i := len(oneClauseIdx) - 1; i >= 0; i-- {
-			cidx := oneClauseIdx[i]
-			formulaOut[cidx] = formulaOut[len(formulaOut)-1]
-			formulaOut = formulaOut[:len(formulaOut)-1]
-			better = true
-		}
-		if !better {
+		if !unitprop {
 			break
 		}
 	}
-	return unsatisfiable, formulaOut, assignmentOut
+	unsatisfiable = false
+	return unsatisfiable, assignment
 }

@@ -23,3 +23,22 @@ func (cnf CNF) Copy() CNF {
 	}
 	return out
 }
+
+// NumClause :
+func (cnf CNF) NumClause() int {
+	return len(cnf)
+}
+
+// NumVar :
+func (cnf CNF) NumVar() int {
+	numVar := 0
+	for _, clause := range cnf {
+		for _, literal := range clause {
+			variable := abs(literal)
+			if numVar < variable {
+				numVar = variable
+			}
+		}
+	}
+	return numVar
+}

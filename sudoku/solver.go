@@ -8,8 +8,8 @@ func SolveOnce(n int, board Board, excludedList []Board) (satisfiable bool, resu
 	satisfiable, assignment := sat.SolveOnce(formula)
 	if satisfiable {
 		result = NewBoard(n)
-		for vi, boolean := range assignment {
-			if boolean {
+		for vi, value := range assignment {
+			if value == sat.ValueTrue {
 				pi := v2p[n][vi]
 				result[pi.row][pi.col] = pi.val
 			}

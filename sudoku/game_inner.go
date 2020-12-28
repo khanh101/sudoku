@@ -85,15 +85,14 @@ func (g *game) getViolation() [][]bool {
 }
 
 func (g *game) Implication() (ok bool, view PlacementView) {
-
 	formula := Reduce(g.n, g.current, nil)
-	unsat, _, assignment := sat.Implication(formula, make(map[int]bool))
+	unsat, assignment := sat.Implication(formula, nil)
 	if unsat {
 		ok = false
 		return ok, view
 	}
-	for vi, b := range assignment {
-		if b {
+	for vi, value := range assignment {
+		if value == sat.ValueTrue {
 			pi := v2p[g.n][vi]
 			if g.current[pi.row][pi.col] == 0 {
 				ok = true
@@ -110,9 +109,19 @@ func (g *game) Implication() (ok bool, view PlacementView) {
 }
 
 func (g *game) Undo() (ok bool, view PlacementView) {
-	return false, PlacementView{}
+	if len(g.stack) == 0 {
+		return false, view
+	}
+	view = g.stack[len(g.stack)-1]
+	g.stack = g.stack[:len(g.stack)-1]
+	return true, view
 }
 
-func (g *game) Place(placement PlacementView) {
-
+func (g *game) Place(p PlacementView) {
+	if !g.initial[p.Row][p.Col] {
+		g.current[p.Row][p.Col] = p.Val
+		if p.Val > 0 {
+			g.stack = append(g.stack, p)
+		}
+	}
 }
