@@ -70,6 +70,7 @@ function login() {
             key: text,
         }, function(response) {
             key = response.key;
+            textkey.value = key;
             access();
             update_board();
         });
