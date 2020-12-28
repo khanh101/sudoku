@@ -83,7 +83,7 @@ function login() {
 }
 
 function get_current_board_string() {
-    out = "";
+    out = "board: ";
     for (let rowid=0; rowid<9; rowid++) {
         for (let colid=0; colid<9; colid++) {
             out += current_board[rowid][colid];
