@@ -1,6 +1,8 @@
 package gui
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,7 +12,7 @@ type Server interface {
 }
 
 // Timeout :
-const Timeout = 60
+const Timeout = time.Duration(60 * time.Second)
 
 // NewServer :
 func NewServer() Server {
