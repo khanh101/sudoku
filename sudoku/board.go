@@ -1,5 +1,10 @@
 package sudoku
 
+import (
+	"fmt"
+	"strconv"
+)
+
 // Board :
 type Board [][]int
 
@@ -20,4 +25,15 @@ func (board Board) Copy() Board {
 		copy(out[r], row)
 	}
 	return out
+}
+
+func printBoard(board Board) {
+	out := ""
+	for _, row := range board {
+		for _, val := range row {
+			out += strconv.Itoa(val) + " "
+		}
+		out += "\n"
+	}
+	fmt.Println(out)
 }

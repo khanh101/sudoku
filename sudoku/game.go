@@ -1,10 +1,5 @@
 package sudoku
 
-import (
-	"fmt"
-	"strconv"
-)
-
 // Game :
 type Game interface {
 	View() GameView
@@ -26,17 +21,6 @@ type PlacementView struct {
 	Row int `json:"row"`
 	Col int `json:"col"`
 	Val int `json:"value"`
-}
-
-func printBoard(board Board) {
-	out := ""
-	for _, row := range board {
-		for _, val := range row {
-			out += strconv.Itoa(val) + " "
-		}
-		out += "\n"
-	}
-	fmt.Println(out)
 }
 
 // NewGame :

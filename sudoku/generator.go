@@ -1,6 +1,8 @@
 package sudoku
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 type c struct {
 	row int
@@ -53,25 +55,24 @@ func Generate(n int, seed int) Board {
 	s := rand.NewSource(int64(seed))
 	r := rand.New(s)
 	board := NewBoard(n)
-	cList := getCellList(n)
 	// generate unique solution board
-	r.Shuffle(len(cList), func(i int, j int) {
-		cList[i], cList[j] = cList[j], cList[i]
-	})
-	for _, ci := range cList {
-		if board[ci.row][ci.col] != 0 {
+	pList := getPosList(n)
+	for {
+		pi := pList[r.Intn(len(pList))]
+		if board[pi.row][pi.col] != 0 {
 			continue
 		}
-		board[ci.row][ci.col] = 1 + r.Intn(n*n)
+		board[pi.row][pi.col] = pi.val
 		numSolution := getNumSolution(n, board, 2)
 		if numSolution == 1 {
 			break
 		}
 		if numSolution == 0 {
-			board[ci.row][ci.col] = 0
+			board[pi.row][pi.col] = 0
 		}
 	}
 	// simplify board
+	cList := getCellList(n)
 	r.Shuffle(len(cList), func(i int, j int) {
 		cList[i], cList[j] = cList[j], cList[i]
 	})
