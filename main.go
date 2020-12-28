@@ -1,26 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
-
-	"github.com/khanhhhh/sudoku/sudoku"
+	"github.com/khanhhhh/sudoku/gui"
 )
 
-func printBoard(board sudoku.Board) {
-	out := ""
-	for _, row := range board {
-		for _, val := range row {
-			out += strconv.Itoa(val) + " "
-		}
-		out += "\n"
-	}
-	fmt.Println(out)
-}
-
 func main() {
-	g := sudoku.NewGame(3, 1234)
-	ok, view := g.Implication()
-	fmt.Println(ok, view)
+	s := gui.NewServer()
+	s.Run(":8080")
 	return
 }

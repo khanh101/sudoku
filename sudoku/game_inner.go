@@ -1,6 +1,10 @@
 package sudoku
 
-import "github.com/khanhhhh/sudoku/sat"
+import (
+	"sync"
+
+	"github.com/khanhhhh/sudoku/sat"
+)
 
 type game struct {
 	n        int
@@ -8,9 +12,12 @@ type game struct {
 	initial  [][]bool
 	solution Board
 	stack    []PlacementView
+	mtx      sync.RWMutex
 }
 
 func (g *game) View() GameView {
+	g.mtx.RLock()
+	defer g.mtx.RUnlock()
 	view := GameView{}
 	view.YouWin = true
 	for row := 0; row < g.n*g.n; row++ {
@@ -65,6 +72,9 @@ func (g *game) getViolationCell(cin c) []c {
 
 func (g *game) getViolation() [][]bool {
 	violation := make([][]bool, g.n*g.n)
+	for i := range violation {
+		violation[i] = make([]bool, g.n*g.n)
+	}
 	for row := 0; row < g.n*g.n; row++ {
 		for col := 0; col < g.n*g.n; col++ {
 			if violation[row][col] {
@@ -85,6 +95,8 @@ func (g *game) getViolation() [][]bool {
 }
 
 func (g *game) Implication() (ok bool, view PlacementView) {
+	g.mtx.RLock()
+	defer g.mtx.RUnlock()
 	formula := Reduce(g.n, g.current, nil)
 	unsat, assignment := sat.Implication(formula, nil)
 	if unsat {
@@ -109,6 +121,8 @@ func (g *game) Implication() (ok bool, view PlacementView) {
 }
 
 func (g *game) Undo() (ok bool, view PlacementView) {
+	g.mtx.Lock()
+	defer g.mtx.Unlock()
 	if len(g.stack) == 0 {
 		return false, view
 	}
@@ -118,6 +132,8 @@ func (g *game) Undo() (ok bool, view PlacementView) {
 }
 
 func (g *game) Place(p PlacementView) {
+	g.mtx.Lock()
+	defer g.mtx.Unlock()
 	if !g.initial[p.Row][p.Col] {
 		g.current[p.Row][p.Col] = p.Val
 		if p.Val > 0 {

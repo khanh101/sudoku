@@ -1,5 +1,10 @@
 package sudoku
 
+import (
+	"fmt"
+	"strconv"
+)
+
 // Game :
 type Game interface {
 	View() GameView
@@ -23,6 +28,17 @@ type PlacementView struct {
 	Val int `json:"value"`
 }
 
+func printBoard(board Board) {
+	out := ""
+	for _, row := range board {
+		for _, val := range row {
+			out += strconv.Itoa(val) + " "
+		}
+		out += "\n"
+	}
+	fmt.Println(out)
+}
+
 // NewGame :
 func NewGame(n int, seed int) Game {
 	current := Generate(n, seed)
@@ -36,6 +52,7 @@ func NewGame(n int, seed int) Game {
 			initial[row][col] = current[row][col] != 0
 		}
 	}
+	printBoard(solution)
 	return &game{
 		n:        n,
 		current:  current,

@@ -9,13 +9,14 @@ type Server interface {
 	Run(addr string)
 }
 
+// Timeout :
+const Timeout = 60
+
 // NewServer :
 func NewServer() Server {
 	s := &server{
 		r: gin.Default(),
+		s: newSession(Timeout),
 	}
-	s.r.Static("/", "./gui/static/")
-	s.r.POST("/api/view", func(c *gin.Context) {
-		c.ShouldBindJSON()
-	})
+	return s
 }
