@@ -31,7 +31,7 @@ const STATE_PLAYING = 1;
 let state = STATE_WAITING;
 let key = null;
 function setup() {
-    noLoop();
+    // noLoop();
     let canvas = createCanvas(9 * cell_size, 11 * cell_size);
     // canvas.position(screen_width - pad - 9 * cell_size, pad);
     canvas.parent("p5canvas");
