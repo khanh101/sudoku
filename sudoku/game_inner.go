@@ -100,9 +100,8 @@ func (g *game) Implication() (ok bool, view ImplicationView) {
 	defer g.mtx.RUnlock()
 	formula := Reduce(g.n, g.current, nil)
 	// unsat, assignment, explanation := sat.Implication(formula, nil, true)
-	unsat, assignment, explanation := Implication(formula, true)
-	if unsat {
-		ok = false
+	ok, assignment, explanation := Implication(formula, true)
+	if !ok {
 		return ok, view
 	}
 	for vi, value := range assignment {

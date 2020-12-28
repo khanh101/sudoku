@@ -13,7 +13,7 @@ func sign(x int) int {
 }
 
 // Implication : implication but stop in first positive literal with len of clause > 1
-func Implication(formula sat.CNF, explain bool) (unsatisfiable bool, assignment sat.Assignment, explanation sat.Explanation) {
+func Implication(formula sat.CNF, explain bool) (found bool, assignment sat.Assignment, explanation sat.Explanation) {
 	if explain {
 		explanation = make(sat.Explanation)
 	}
@@ -50,8 +50,8 @@ func Implication(formula sat.CNF, explain bool) (unsatisfiable bool, assignment 
 		for idx, clause := range formula {
 			value, numZero, firstZeroIdx := clauseValue(clause)
 			if value == sat.ValueFalse {
-				unsatisfiable = true
-				return unsatisfiable, assignment, explanation
+				found = false
+				return found, assignment, explanation
 			}
 			if value == sat.ValueTrue {
 				continue
@@ -64,8 +64,8 @@ func Implication(formula sat.CNF, explain bool) (unsatisfiable bool, assignment 
 					explanation[activateLiteral] = idx
 				}
 				if activateLiteral > 0 && len(clause) > 1 {
-					unsatisfiable = false
-					return unsatisfiable, assignment, explanation
+					found = true
+					return found, assignment, explanation
 				}
 			}
 		}
@@ -73,6 +73,6 @@ func Implication(formula sat.CNF, explain bool) (unsatisfiable bool, assignment 
 			break
 		}
 	}
-	unsatisfiable = false
-	return unsatisfiable, assignment, explanation
+	found = false
+	return found, assignment, explanation
 }
