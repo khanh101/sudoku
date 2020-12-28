@@ -46,8 +46,6 @@ function setup() {
         value_img_list[num].resize(cell_size, cell_size);
     }
     youwin_panel_img.resize(9 * cell_size, 2 * cell_size);
-
-    draw();
 }
 
 
@@ -90,7 +88,6 @@ function update_board() {
         initial_mask = response.initial_mask;
         violation_mask = response.violation_mask;
         state = STATE_PLAYING;
-        draw();
     });
 }
 
@@ -135,6 +132,9 @@ function implication() {
 }
 
 function draw() {
+    if (key !== null) {
+        update_board();
+    }
     background(230, 230, 230);
     switch (state) {
         case STATE_WAITING:
@@ -210,7 +210,6 @@ function draw_board_playing() {
 
 function mousePressed() {
     current_cell = pos_to_cell(mouseX, mouseY);
-    draw();
 }
 
 function pos_to_cell(x, y) {
@@ -290,5 +289,4 @@ function keyPressed() {
     if (keyCode == 72) {
         implication();
     }// h
-    draw();
 }
