@@ -143,13 +143,13 @@ func (g *game) Implication() (ok bool, view ImplicationView) {
 					out := ""
 					if literal > 0 {
 						out += fmt.Sprintf(
-							"(%d) {row %d, col %d, val %d}",
-							variable, pos.row, pos.col, pos.val,
+							"{row %d, col %d} is %d",
+							pos.row, pos.col, pos.val,
 						)
 					} else {
 						out += fmt.Sprintf(
-							"(%d) not {row %d, col %d, val %d}",
-							variable, pos.row, pos.col, pos.val,
+							"{row %d, col %d} is not %d",
+							pos.row, pos.col, pos.val,
 						)
 					}
 					return out

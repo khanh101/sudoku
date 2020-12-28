@@ -127,8 +127,8 @@ function implication() {
         const {row, col, value} = response;
         current_cell = [row, col]
         place(row, col, value);
-        document.getElementById("implication").textContent = `implication: found {row: ${row}, col: ${col}, value ${value}}`;
-        document.getElementById("implication").textContent += `\nexplanation: ${response.explanation}`;
+        document.getElementById("implication").innerHTML = `implication: found {row: ${row}, col: ${col}} is ${value} <br>`;
+        document.getElementById("implication").innerHTML += `explanation: ${response.explanation}`;
     })
 
 }
