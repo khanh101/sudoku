@@ -20,7 +20,8 @@ func printBoard(board sudoku.Board) {
 }
 
 func main() {
-	s := gui.NewServer()
+	seed := 1234
+	s := gui.NewServer(seed)
 	s.Run(":8080")
 	return
 }

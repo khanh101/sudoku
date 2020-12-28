@@ -20,10 +20,11 @@ type Server interface {
 const Timeout = time.Duration(60 * time.Second)
 
 // NewServer :
-func NewServer() Server {
+func NewServer(seed int) Server {
 	s := &server{
-		r: gin.Default(),
-		s: newSession(Timeout),
+		r:    gin.Default(),
+		s:    newSession(Timeout),
+		rand: rand.New(rand.NewSource(int64(seed))),
 	}
 	// init (3*3 x 3*3) board
 	sudoku.ReduceBase(N)
@@ -40,7 +41,7 @@ func NewServer() Server {
 		}
 		intKey, err := strconv.Atoi(key.Key)
 		if err != nil {
-			intKey = rand.Int()
+			intKey = s.rand.Int()
 			key.Key = strconv.Itoa(intKey)
 		}
 		s.s.set(key.Key, sudoku.NewGame(N, intKey))

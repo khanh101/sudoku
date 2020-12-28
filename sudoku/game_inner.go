@@ -1,19 +1,19 @@
 package sudoku
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/khanhhhh/sudoku/sat"
 )
 
 type game struct {
-	n        int
-	current  Board
-	initial  [][]bool
-	solution Board
-	stack    []PlacementView
-	mtx      sync.RWMutex
+	n         int
+	current   Board
+	initial   [][]bool
+	solution  Board
+	violation [][]bool
+	stack     []PlacementView
+	mtx       sync.RWMutex
 }
 
 func (g *game) View() GameView {
@@ -31,7 +31,7 @@ func (g *game) View() GameView {
 	}
 	view.CurrentBoard = g.current
 	view.InitialMask = g.initial
-	view.ViolationMask = g.getViolation()
+	view.ViolationMask = g.violation
 	return view
 }
 
@@ -99,7 +99,8 @@ func (g *game) Implication() (ok bool, view ImplicationView) {
 	g.mtx.RLock()
 	defer g.mtx.RUnlock()
 	formula := Reduce(g.n, g.current, nil)
-	unsat, assignment, explanation := sat.Implication(formula, nil, true)
+	// unsat, assignment, explanation := sat.Implication(formula, nil, true)
+	unsat, assignment, explanation := Implication(formula, true)
 	if unsat {
 		ok = false
 		return ok, view
@@ -137,27 +138,15 @@ func (g *game) Implication() (ok bool, view ImplicationView) {
 					}
 					return leaf
 				}
-				literalToString := func(literal sat.Literal) string {
-					variable := abs(literal)
-					pos := v2p[g.n][variable]
-					out := ""
-					if literal > 0 {
-						out += fmt.Sprintf(
-							"{row %d, col %d} is %d",
-							pos.row, pos.col, pos.val,
-						)
-					} else {
-						out += fmt.Sprintf(
-							"{row %d, col %d} is not %d",
-							pos.row, pos.col, pos.val,
-						)
-					}
-					return out
-				}
 				leaf := findLeaf(vi)
-				view.Exp = "because of "
-				for _, l := range leaf {
-					view.Exp += literalToString(l) + ", "
+				view.Exp = make([]PlacementView, len(leaf))
+				for i, l := range leaf {
+					pos := v2p[g.n][abs(l)]
+					view.Exp[i] = PlacementView{
+						Row: pos.row,
+						Col: pos.col,
+						Val: pos.val,
+					}
 				}
 				return ok, view
 			}
@@ -187,6 +176,7 @@ func (g *game) Place(p PlacementView) {
 		if p.Val > 0 {
 			g.stack = append(g.stack, p)
 		}
+		g.violation = g.getViolation()
 	}
 }
 

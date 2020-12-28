@@ -12,6 +12,7 @@ let initial_img = null;
 let violation_img = null;
 let value_img_list = [];
 let youwin_panel_img = null;
+let explanation_img = null;
 function preload() {
     waiting_panel_img = loadImage("assets/waiting_panel.png");
     waiting_img = loadImage("assets/waiting.png");
@@ -24,6 +25,7 @@ function preload() {
         value_img_list.push(loadImage(`assets/${num}.png`));
     }
     youwin_panel_img = loadImage("assets/youwin_panel.png");
+    explanation_img = loadImage("assets/explanation.png")
 }
 
 const STATE_WAITING = 0;
@@ -31,7 +33,7 @@ const STATE_PLAYING = 1;
 let state = STATE_WAITING;
 let key = null;
 function setup() {
-    // noLoop();
+    noLoop();
     let canvas = createCanvas(9 * cell_size, 11 * cell_size);
     // canvas.position(screen_width - pad - 9 * cell_size, pad);
     canvas.parent("p5canvas");
@@ -46,6 +48,7 @@ function setup() {
         value_img_list[num].resize(cell_size, cell_size);
     }
     youwin_panel_img.resize(9 * cell_size, 2 * cell_size);
+    explanation_img.resize(cell_size, cell_size);
 }
 
 
@@ -54,6 +57,7 @@ let youwin = null;
 let current_board = null;
 let initial_mask = null;
 let violation_mask = null;
+let current_explanation = null;
 
 function login() {
     const textkey = document.getElementById("key");
@@ -89,10 +93,12 @@ function update_board() {
         initial_mask = response.initial_mask;
         violation_mask = response.violation_mask;
         state = STATE_PLAYING;
+        draw();
     });
 }
 
 function place(row, col, value) {
+    current_explanation = null;
     httpPost("api/place", "json", {
         key: key,
         row: row,
@@ -127,8 +133,8 @@ function implication() {
         const {row, col, value} = response;
         current_cell = [row, col]
         place(row, col, value);
-        document.getElementById("implication").innerHTML = `implication: found {row: ${row}, col: ${col}} is ${value} <br>`;
-        document.getElementById("implication").innerHTML += `explanation: ${response.explanation}`;
+        current_explanation = response.explanation;
+        document.getElementById("implication").textContent = `implication: found {row: ${row}, col: ${col}} is ${value}`;
     })
 
 }
@@ -201,6 +207,16 @@ function draw_board_playing() {
                 }
             }
         }
+        // current explanation
+        if (current_explanation !== null) {
+            for (let i=0; i<current_explanation.length; i++) {
+                const cell = current_explanation[i];
+                const row = cell.row;
+                const col = cell.col;
+                const [x, y] = cell_to_pos_tl(row, col);
+                image(explanation_img, x, y);
+            }
+        }
         // current
         if (current_cell !== null) {
             const [row, col] = current_cell;
@@ -212,6 +228,7 @@ function draw_board_playing() {
 
 function mousePressed() {
     current_cell = pos_to_cell(mouseX, mouseY);
+    draw();
 }
 
 function pos_to_cell(x, y) {
@@ -291,4 +308,5 @@ function keyPressed() {
     if (keyCode == 72) {
         implication();
     }// h
+    draw();
 }

@@ -1,6 +1,8 @@
 package gui
 
 import (
+	"math/rand"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -8,8 +10,9 @@ import (
 const N = 3
 
 type server struct {
-	r *gin.Engine
-	s *session
+	r    *gin.Engine
+	s    *session
+	rand *rand.Rand
 }
 
 func (s *server) Run(addr string) {

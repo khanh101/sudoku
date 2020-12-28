@@ -25,10 +25,10 @@ type PlacementView struct {
 
 // ImplicationView :
 type ImplicationView struct {
-	Row int    `json:"row"`
-	Col int    `json:"col"`
-	Val int    `json:"value"`
-	Exp string `json:"explanation"`
+	Row int             `json:"row"`
+	Col int             `json:"col"`
+	Val int             `json:"value"`
+	Exp []PlacementView `json:"explanation"`
 }
 
 // NewGame :
@@ -45,11 +45,13 @@ func NewGame(n int, seed int) Game {
 		}
 	}
 	printBoard(solution)
-	return &game{
+	g := &game{
 		n:        n,
 		current:  current,
 		initial:  initial,
 		solution: solution,
 		stack:    make([]PlacementView, 0),
 	}
+	g.violation = g.getViolation()
+	return g
 }
