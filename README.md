@@ -1,10 +1,8 @@
 # sudoku
 
-Simple sudoku solver and unique-solution sudoku generator using PySAT
+Simple sudoku solver and unique-solution sudoku generator using gini sat solver
 
 # Features
-
-- Glucose4 SAT solver
 
 - Help with implication
 
