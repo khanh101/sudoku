@@ -119,7 +119,7 @@ function place(row, col, value) {
     }, update_board_and_draw);
 }
 
-function undo() {
+function undo_button() {
     httpPost("api/undo", "json", {
         key: key,
     }, function (response) {
@@ -134,7 +134,7 @@ function undo() {
     });
 }
 
-function implication() {
+function implication_button() {
     httpPost("api/implication", "json", {
         key: key,
     }, function (response) {
@@ -244,7 +244,7 @@ function pos_to_cell(x, y) {
     const col = Math.floor(x / cell_size);
     const row = Math.floor(y / cell_size);
     if (!((0 <= col && col < 9) && (0 <= row && row < 9))) {
-        return null;
+        return current_cell;
     }
     return [row, col]
 }
@@ -312,9 +312,50 @@ function keyPressed() {
         }
     }// x
     if (keyCode === 85) {
-        undo();
+        undo_button();
     }// u
     if (keyCode == 72) {
-        implication();
+        implication_button();
     }// h
+}
+
+function clear_button() {
+    const [row, col] = current_cell;
+    place(row, col, 0);
+}
+function num_1_button() {
+    const [row, col] = current_cell;
+    place(row, col, 1);
+}
+function num_2_button() {
+    const [row, col] = current_cell;
+    place(row, col, 2);
+}
+function num_3_button() {
+    const [row, col] = current_cell;
+    place(row, col, 3);
+}
+function num_4_button() {
+    const [row, col] = current_cell;
+    place(row, col, 4);
+}
+function num_5_button() {
+    const [row, col] = current_cell;
+    place(row, col, 5);
+}
+function num_6_button() {
+    const [row, col] = current_cell;
+    place(row, col, 6);
+}
+function num_7_button() {
+    const [row, col] = current_cell;
+    place(row, col, 7);
+}
+function num_8_button() {
+    const [row, col] = current_cell;
+    place(row, col, 8);
+}
+function num_9_button() {
+    const [row, col] = current_cell;
+    place(row, col, 9);
 }
