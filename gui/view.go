@@ -5,11 +5,6 @@ type KeyView struct {
 	Key string `json:"key"`
 }
 
-// BoardView :
-type BoardView struct {
-	Board string `json:"board"`
-}
-
 // PosView :
 type PosView struct {
 	Key string `json:"key"`

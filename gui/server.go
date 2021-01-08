@@ -3,7 +3,6 @@ package gui
 import (
 	"math/rand"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -38,52 +37,14 @@ func NewServer(seed int) Server {
 				return
 			}
 		}
-		intKey, err := strconv.Atoi(key.Key)
-		if err != nil {
-			intKey = s.rand.Int()
-			key.Key = strconv.Itoa(intKey)
+
+		board, ok := sudoku.FromString(N, key.Key)
+		if !ok {
+			board = sudoku.Generate(N, s.rand.Int())
 		}
-		current := sudoku.Generate(N, intKey)
-		s.s.set(key.Key, sudoku.NewGameWithBoard(N, current))
-		c.JSON(http.StatusOK, key)
-	})
-	s.r.POST("/api/new_board", func(c *gin.Context) {
-		board := BoardView{}
-		key := KeyView{}
-		if err := c.BindJSON(&board); err == nil {
-			value := s.s.get(board.Board)
-			if value != nil {
-				key.Key = value.(string)
-				c.JSON(http.StatusOK, key)
-				return
-			}
-		}
-		if len(board.Board) >= N*N*N*N {
-			var err error
-			current := sudoku.NewBoard(N)
-			count := 0
-			for row := 0; row < N*N; row++ {
-				for col := 0; col < N*N; col++ {
-					current[row][col], err = strconv.Atoi(board.Board[count : count+1])
-					if err != nil {
-						break
-					}
-					count++
-				}
-				if err != nil {
-					break
-				}
-			}
-			if err == nil {
-				key.Key = board.Board[0 : N*N*N*N]
-				s.s.set(key.Key, sudoku.NewGameWithBoard(N, current))
-				c.JSON(http.StatusOK, key)
-				return
-			}
-		}
-		intKey := s.rand.Int()
-		key.Key = strconv.Itoa(intKey)
-		s.s.set(key.Key, sudoku.NewGame(N, intKey))
+		key.Key = sudoku.ToString(board)
+
+		s.s.set(key.Key, sudoku.NewGame(N, board))
 		c.JSON(http.StatusOK, key)
 	})
 	s.r.POST("/api/view", func(c *gin.Context) {
