@@ -1,7 +1,7 @@
-function access() {
-    httpPost("api/access", "json", {
+function interval_access() {
+    httpPost("api/interval_access", "json", {
         key: key,
     }, function() {
-        setTimeout(access, 30000);
+        setTimeout(interval_access, 30000);
     });
 }

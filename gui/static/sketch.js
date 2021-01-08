@@ -66,8 +66,8 @@ function login() {
         httpPost("api/new", "json", {}, function(response) {
             key = response.key;
             textkey.value = key;
-            access();
-            update_board();
+            interval_access();
+            update_board_and_draw();
         });
     } else {
         httpPost("api/new", "json", {
@@ -75,8 +75,8 @@ function login() {
         }, function(response) {
             key = response.key;
             textkey.value = key;
-            access();
-            update_board();
+            interval_access();
+            update_board_and_draw();
         });
     }
     
@@ -92,7 +92,7 @@ function get_current_board_string() {
     return out;
 }
 
-function update_board() {
+function update_board_and_draw() {
     httpPost("api/view", "json", {
         key: key,
     }, function (response) {
@@ -115,7 +115,7 @@ function place(row, col, value) {
         row: row,
         col: col,
         value: value,
-    }, update_board);
+    }, update_board_and_draw);
 }
 
 function undo() {
@@ -151,9 +151,6 @@ function implication() {
 }
 
 function draw() {
-    if (key !== null) {
-        update_board();
-    }
     background(230, 230, 230);
     switch (state) {
         case STATE_WAITING:
@@ -319,5 +316,4 @@ function keyPressed() {
     if (keyCode == 72) {
         implication();
     }// h
-    draw();
 }
