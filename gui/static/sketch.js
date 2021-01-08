@@ -71,17 +71,16 @@ function login_random() {
 function login_key() {
     const textkey = document.getElementById("key");
     if (textkey.value.length === 0) {
-        login_random();
-    } else {
-        httpPost("api/new", "json", {
-            key: textkey.value,
-        }, function(response) {
-            key = response.key;
-            textkey.value = key;
-            interval_access();
-            update_board_and_draw();
-        });
+        textkey.value = new Array(81 + 1).join("0");
     }
+    httpPost("api/new", "json", {
+        key: textkey.value,
+    }, function(response) {
+        key = response.key;
+        textkey.value = key;
+        interval_access();
+        update_board_and_draw();
+    });
 }
 
 function get_current_board_string() {
