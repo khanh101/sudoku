@@ -9,7 +9,7 @@ import (
 
 func main() {
 	seed := int(time.Now().UnixNano())
-	portno := 8080
+	portno := 3000
 	s := gui.NewServer(seed)
 	fmt.Printf("Server is up at: http://0.0.0.0:%d\n", portno)
 	s.Run(fmt.Sprintf(":%d", portno))

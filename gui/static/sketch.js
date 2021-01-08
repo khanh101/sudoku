@@ -68,14 +68,13 @@ function login_random() {
     });
 }
 
-function login() {
+function login_key() {
     const textkey = document.getElementById("key");
-    const text = textkey.value;
-    if (text === "random") {
+    if (textkey.value.length === 0) {
         login_random();
     } else {
         httpPost("api/new", "json", {
-            key: text,
+            key: textkey.value,
         }, function(response) {
             key = response.key;
             textkey.value = key;
@@ -83,7 +82,23 @@ function login() {
             update_board_and_draw();
         });
     }
-    
+}
+
+function login_board() {
+    const textkey = document.getElementById("key");
+    const textboard = document.getElementById("board");
+    if (textboard.value.length === 0) {
+        login_random();
+    } else {
+        httpPost("api/new_board", "json", {
+            board: textboard.value,
+        }, function(response) {
+            key = response.key;
+            textkey.value = key;
+            interval_access();
+            update_board_and_draw();
+        });
+    }
 }
 
 function get_current_board_string() {

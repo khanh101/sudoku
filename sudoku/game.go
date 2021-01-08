@@ -31,9 +31,8 @@ type ImplicationView struct {
 	Exp []PlacementView `json:"explanation"`
 }
 
-// NewGame :
-func NewGame(n int, seed int) Game {
-	current := Generate(n, seed)
+// NewGameWithBoard :
+func NewGameWithBoard(n int, current Board) Game {
 	_, solution := SolveOnce(n, current, nil)
 	initial := make([][]bool, n*n)
 	for i := range initial {
