@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -71,7 +70,6 @@ func NewServer(seed int) Server {
 			c.JSON(http.StatusBadRequest, nil)
 			return
 		}
-		fmt.Println(pos)
 		value := s.s.get(pos.Key)
 		if value == nil {
 			c.JSON(http.StatusNotFound, nil)

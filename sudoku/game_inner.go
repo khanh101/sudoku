@@ -99,19 +99,17 @@ func (g *game) Implication() (ok bool, view ImplicationView) {
 	g.mtx.RLock()
 	defer g.mtx.RUnlock()
 	formula := Reduce(g.n, g.current, nil)
-	// unsat, assignment, explanation := sat.Implication(formula, nil, true)
-	ok, assignment, explanation := Implication(formula, true)
-	if !ok {
+	unsat, assignment, explanation := sat.Implication(formula, nil, true)
+	// ok, assignment, explanation := Implication(formula, true)
+	if unsat {
+		ok = false
 		return ok, view
 	}
+	pi2leaf := make(map[p][]sat.Literal)
 	for vi, value := range assignment {
 		if value == sat.ValueTrue {
 			pi := v2p[g.n][vi]
 			if g.current[pi.row][pi.col] == 0 {
-				ok = true
-				view.Row = pi.row
-				view.Col = pi.col
-				view.Val = pi.val
 				// generate explanation
 				findLeaf := func(root sat.Literal) []sat.Literal {
 					leaf := make([]sat.Literal, 0)
@@ -138,21 +136,39 @@ func (g *game) Implication() (ok bool, view ImplicationView) {
 					return leaf
 				}
 				leaf := findLeaf(vi)
-				view.Exp = make([]PlacementView, len(leaf))
-				for i, l := range leaf {
-					pos := v2p[g.n][abs(l)]
-					view.Exp[i] = PlacementView{
-						Row: pos.row,
-						Col: pos.col,
-						Val: pos.val,
-					}
-				}
-				return ok, view
+				pi2leaf[pi] = leaf
 			}
-
 		}
 	}
-	ok = false
+	// find smallest explanation
+	if len(pi2leaf) == 0 {
+		ok = false
+		return ok, view
+	}
+	var smallestLenLeaf int = 999999999
+	var smallestLeaf []sat.Literal = nil
+	var smallestPi p
+	for pi, leaf := range pi2leaf {
+		if len(leaf) < smallestLenLeaf {
+			smallestLenLeaf = len(leaf)
+			smallestLeaf = leaf
+			smallestPi = pi
+		}
+	}
+
+	view.Col = smallestPi.col
+	view.Row = smallestPi.row
+	view.Val = smallestPi.val
+	view.Exp = make([]PlacementView, len(smallestLeaf))
+	for i, l := range smallestLeaf {
+		pos := v2p[g.n][abs(l)]
+		view.Exp[i] = PlacementView{
+			Row: pos.row,
+			Col: pos.col,
+			Val: pos.val,
+		}
+	}
+	ok = true
 	return ok, view
 }
 

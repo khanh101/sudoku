@@ -1,7 +1,10 @@
 package sat
 
+// ClauseIdx :
+type ClauseIdx = int
+
 // Explanation :
-type Explanation map[Literal]int
+type Explanation map[Literal]ClauseIdx
 
 // Implication :
 func Implication(formula CNF, bootstrap Assignment, explain bool) (unsatisfiable bool, assignment Assignment, explanation Explanation) {
