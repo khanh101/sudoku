@@ -84,32 +84,6 @@ function login_key() {
     }
 }
 
-function login_board() {
-    const textkey = document.getElementById("key");
-    const textboard = document.getElementById("board");
-    if (textboard.value.length === 0) {
-        login_random();
-    } else {
-        httpPost("api/new_board", "json", {
-            board: textboard.value,
-        }, function(response) {
-            key = response.key;
-            textkey.value = key;
-            interval_access();
-            update_board_and_draw();
-        });
-    }
-}
-
-function get_current_board_string() {
-    out = "";
-    for (let rowid=0; rowid<9; rowid++) {
-        for (let colid=0; colid<9; colid++) {
-            out += current_board[rowid][colid];
-        }
-    }
-    return out;
-}
 
 function update_board_and_draw() {
     httpPost("api/view", "json", {
@@ -122,7 +96,6 @@ function update_board_and_draw() {
         initial_mask = response.initial_mask;
         violation_mask = response.violation_mask;
         state = STATE_PLAYING;
-        document.getElementById("board").value = get_current_board_string();
         draw();
     });
 }
