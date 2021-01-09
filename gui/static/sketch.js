@@ -33,7 +33,8 @@ const STATE_PLAYING = 1;
 let state = STATE_WAITING;
 let key = null;
 function setup() {
-    noLoop();
+    //noLoop();
+    frameRate(2);
     let canvas = createCanvas(9 * cell_size, 11 * cell_size);
     canvas.parent("p5canvas");
     waiting_panel_img.resize(9 * cell_size, 2 * cell_size);
@@ -64,7 +65,7 @@ function login_random() {
         key = response.key;
         textkey.value = key;
         interval_access();
-        update_board_and_draw();
+        draw();
     });
 }
 
@@ -79,7 +80,7 @@ function login_key() {
         key = response.key;
         textkey.value = key;
         interval_access();
-        update_board_and_draw();
+        draw();
     });
 }
 
@@ -93,7 +94,7 @@ function get_current_board_string() {
     return out;
 }
 
-function update_board_and_draw() {
+function update_board(cb) {
     httpPost("api/view", "json", {
         key: key,
     }, function (response) {
@@ -105,7 +106,7 @@ function update_board_and_draw() {
         violation_mask = response.violation_mask;
         state = STATE_PLAYING;
         document.getElementById("board").value = get_current_board_string();
-        draw();
+        cb();
     });
 }
 
@@ -116,7 +117,7 @@ function place(row, col, value) {
         row: row,
         col: col,
         value: value,
-    }, update_board_and_draw);
+    }, draw);
 }
 
 function undo_button() {
@@ -152,16 +153,23 @@ function implication_button() {
 }
 
 function draw() {
-    background(230, 230, 230);
-    switch (state) {
-        case STATE_WAITING:
-            draw_panel_waiting();
-            draw_board_waiting();
-            break;
-        case STATE_PLAYING:
-            draw_board_playing();
-            draw_panel_playing();
-            break;
+    function _draw() {
+        background(230, 230, 230);
+        switch (state) {
+            case STATE_WAITING:
+                draw_panel_waiting();
+                draw_board_waiting();
+                break;
+            case STATE_PLAYING:
+                draw_board_playing();
+                draw_panel_playing();
+                break;
+        }
+    }
+    if (key != null) {
+        update_board(_draw);
+    } else {
+        _draw();
     }
 }
 
