@@ -32,8 +32,12 @@ type ImplicationView struct {
 }
 
 // NewGame :
-func NewGame(n int, current Board) Game {
-	_, solution := SolveOnce(n, current, nil)
+func NewGame(n int, current Board) (Game, bool) {
+	printBoard(current)
+	ok, solution := SolveOnce(n, current, nil)
+	if !ok {
+		return nil, false
+	}
 	initial := make([][]bool, n*n)
 	for i := range initial {
 		initial[i] = make([]bool, n*n)
@@ -52,5 +56,5 @@ func NewGame(n int, current Board) Game {
 		stack:    make([]PlacementView, 0),
 	}
 	g.violation = g.getViolation()
-	return g
+	return g, true
 }

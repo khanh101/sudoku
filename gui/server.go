@@ -3,6 +3,7 @@ package gui
 import (
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -29,6 +30,29 @@ func NewServer(seed int) Server {
 
 	s.r.Static("/", "./gui/static/")
 	s.r.POST("/api/new", func(c *gin.Context) {
+		boardView := BoardView{}
+		if err := c.BindJSON(&boardView); err != nil {
+			c.JSON(http.StatusBadRequest, nil)
+			return
+		}
+
+		board, ok := sudoku.FromString(N, boardView.Board)
+		intKey := s.rand.Int()
+		if !ok {
+			board = sudoku.Generate(N, intKey)
+		}
+		key := KeyView{
+			Key: strconv.Itoa(intKey),
+		}
+		game, ok := sudoku.NewGame(N, board)
+		if !ok {
+			c.JSON(http.StatusBadRequest, nil)
+			return
+		}
+		s.s.set(key.Key, game)
+		c.JSON(http.StatusOK, key)
+	})
+	s.r.POST("/api/login", func(c *gin.Context) {
 		key := KeyView{}
 		if err := c.BindJSON(&key); err == nil {
 			value := s.s.get(key.Key)
@@ -37,15 +61,7 @@ func NewServer(seed int) Server {
 				return
 			}
 		}
-
-		board, ok := sudoku.FromString(N, key.Key)
-		if !ok {
-			board = sudoku.Generate(N, s.rand.Int())
-		}
-		key.Key = sudoku.ToString(board)
-
-		s.s.set(key.Key, sudoku.NewGame(N, board))
-		c.JSON(http.StatusOK, key)
+		c.JSON(http.StatusBadRequest, nil)
 	})
 	s.r.POST("/api/view", func(c *gin.Context) {
 		key := KeyView{}

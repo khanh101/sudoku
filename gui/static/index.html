@@ -3,8 +3,8 @@
     <title>sudoku</title>
     <script src="./vendor/p5.js"></script>
     <script src="./sketch.js"></script>
+    <script src="./request.js"></script>
     <script src="./timer.js"></script>
-    <script src="./access.js"></script>
 </head>
 <body>
     <main>
@@ -22,10 +22,11 @@
                     <br>
                     <br>
                     <br>
-                    <button id="login_random" onclick="login_random()">Randomize Key</button>
                     Key: <textarea id="key"></textarea>
                     <button id="login_key" onclick="login_key()">Login with Key</button>
                     Board: <textarea id="board"></textarea>
+                    <button id="new_board" onclick="login_board()">Login with Board</button>
+                    <button id="new_random" onclick="login_random()">Randomize</button>
                     <div id="timer"></div>
                     <div id="implication"></div>
                     <div id="undo"></div>
