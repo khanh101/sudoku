@@ -59,6 +59,7 @@ function update_board(cb) {
         current_cell = [response.pointer.row, response.pointer.col];
         state = STATE_PLAYING;
         document.getElementById("board").value = get_current_board_string();
+        document.getElementById("key").value = key;
         cb();
     });
 }
