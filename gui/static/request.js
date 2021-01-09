@@ -18,9 +18,6 @@ function login_random_and_draw() {
 
 function login_key_and_draw() {
     const textkey = document.getElementById("key");
-    if (textkey.value.length === 0) {
-        textkey.value = new Array(81 + 1).join("0");
-    }
     httpPost("api/login", "json", {
         key: textkey.value,
     }, function(response) {
@@ -34,6 +31,9 @@ function login_key_and_draw() {
 function login_board_and_draw() {
     const textkey = document.getElementById("key");
     const textboard = document.getElementById("board");
+    if (textboard.value.length === 0) {
+        textboard.value = new Array(81 + 1).join("0");
+    }
     httpPost("api/new", "json", {
         board: textboard.value,
     }, function(response) {
