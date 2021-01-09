@@ -12,22 +12,35 @@
             <tr>
                 <td><div id="p5canvas"></div></td>
                 <td>
-                    hard puzzle: <textarea readonly>020000080843060000700005030012000007000070000006029000000018590000900816000000004</textarea>
-                    hard puzzle: <textarea readonly>000700089060000003005000260000500008001093040300000020700020006600300000009801400</textarea>
-                    hard puzzle: <textarea readonly>700005080580061003040003000010000007806400000009000600007000090000200006100050300</textarea>
-                    hard puzzle: <textarea readonly>401006000000000923000030006010000000085000200700000304006008000900000480000520060</textarea>
-                    hard puzzle: <textarea readonly>060100500010030040840000007000009360300846700074000000200000080050000000007520009</textarea>
-                    hard puzzle: <textarea readonly>100500006000003000020800905001047600080000000000900250300000000056000047002601000</textarea>
-                    hard puzzle: <textarea readonly>500070900000400001001905070007310000106000020005000000043000609000040000200000508</textarea>
+                    README
+                    <br>
+                    1. Paste your Board and Play: (Board is a row-major string of numbers, 81 numbers)
+                    <br>
+                    2. Randomize Board and Play: (Hardness is random)
+                    <br>
+                    3. Join game with your friends using Room ID
                     <br>
                     <br>
                     <br>
-                    Room ID: <textarea id="key"></textarea>
-                    <button id="login_key" onclick="login_key()">Login with Room ID</button>
+                    Some extremely hard puzzles verified using: <a href="https://www.sudokuwiki.org/sudoku.htm">Sudoku Solver by Andrew Stuart</a>
+                    <br>
+                    1: <textarea readonly>020000080843060000700005030012000007000070000006029000000018590000900816000000004</textarea>
+                    2: <textarea readonly>000700089060000003005000260000500008001093040300000020700020006600300000009801400</textarea>
+                    3: <textarea readonly>700005080580061003040003000010000007806400000009000600007000090000200006100050300</textarea>
+                    4: <textarea readonly>401006000000000923000030006010000000085000200700000304006008000900000480000520060</textarea>
+                    5: <textarea readonly>060100500010030040840000007000009360300846700074000000200000080050000000007520009</textarea>
+                    6: <textarea readonly>100500006000003000020800905001047600080000000000900250300000000056000047002601000</textarea>
+                    7: <textarea readonly>500070900000400001001905070007310000106000020005000000043000609000040000200000508</textarea>
+                    8: <textarea readonly>000000030018206900005000000002800500000000490700903068000408000061000800000001007</textarea>
+                    <br>
+                    <br>
                     <br>
                     Board: <textarea id="board"></textarea>
-                    <button id="new_board" onclick="login_board()">Create Board</button>
-                    <button id="new_random" onclick="login_random()">Randomized Board</button>
+                    <button id="new_board" onclick="login_board_and_draw()">Play with Board</button>
+                    <button id="new_random" onclick="login_random_and_draw()">Play with Randomized Board</button>
+                    <br>
+                    Room ID: <textarea id="key"></textarea>
+                    <button id="login_key" onclick="login_key_and_draw()">Login with Room ID</button>
                     <br>
                     <div id="timer"></div>
                     <div id="implication"></div>

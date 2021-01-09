@@ -12,6 +12,7 @@ type game struct {
 	initial   [][]bool
 	solution  Board
 	violation [][]bool
+	pointer   CellView
 	stack     []PlacementView
 	mtx       sync.RWMutex
 }
@@ -32,6 +33,7 @@ func (g *game) View() GameView {
 	view.CurrentBoard = g.current
 	view.InitialMask = g.initial
 	view.ViolationMask = g.violation
+	view.Pointer = g.pointer
 	return view
 }
 
@@ -186,6 +188,10 @@ func (g *game) Undo() (ok bool, view PlacementView) {
 func (g *game) Place(p PlacementView) {
 	g.mtx.Lock()
 	defer g.mtx.Unlock()
+	g.pointer = CellView{
+		Row: p.Row,
+		Col: p.Col,
+	}
 	if !g.initial[p.Row][p.Col] {
 		g.current[p.Row][p.Col] = p.Val
 		if p.Val > 0 {
@@ -203,4 +209,10 @@ func abs(x int) int {
 		return -x
 	}
 	return 0
+}
+
+func (g *game) Point(pointer CellView) {
+	g.mtx.Lock()
+	defer g.mtx.Unlock()
+	g.pointer = pointer
 }

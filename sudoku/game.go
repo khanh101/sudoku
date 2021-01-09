@@ -6,6 +6,7 @@ type Game interface {
 	Place(PlacementView)
 	Undo() (bool, PlacementView)
 	Implication() (bool, ImplicationView)
+	Point(pointer CellView)
 }
 
 // GameView :
@@ -14,6 +15,13 @@ type GameView struct {
 	CurrentBoard  Board    `json:"current_board"`
 	InitialMask   [][]bool `json:"initial_mask"`
 	ViolationMask [][]bool `json:"violation_mask"`
+	Pointer       CellView `json:"pointer"`
+}
+
+// CellView :
+type CellView struct {
+	Row int `json:"row"`
+	Col int `json:"col"`
 }
 
 // PlacementView :

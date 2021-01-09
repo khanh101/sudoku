@@ -163,8 +163,8 @@ function draw_board_playing() {
 }
 
 function mousePressed() {
-    current_cell = pos_to_cell(mouseX, mouseY);
-    draw();
+    const [row, col] = pos_to_cell(mouseX, mouseY);
+    pointer(row, col, draw);
 }
 
 function pos_to_cell(x, y) {
@@ -188,34 +188,6 @@ function keyPressed() {
     }
     function numpad_to_value(key) {
         return key - 96;
-    }
-    if (keyCode === LEFT_ARROW) {
-        if (current_cell !== null) {
-            if (current_cell[1] > 0) {
-                current_cell[1] -= 1;
-            }
-        }
-    }
-    if (keyCode === RIGHT_ARROW) {
-        if (current_cell !== null) {
-            if (current_cell[1] < 8) {
-                current_cell[1] += 1;
-            }
-        }
-    }
-    if (keyCode === UP_ARROW) {
-        if (current_cell !== null) {
-            if (current_cell[0] > 0) {
-                current_cell[0] -= 1;
-            }
-        }
-    }
-    if (keyCode === DOWN_ARROW) {
-        if (current_cell !== null) {
-            if (current_cell[0] < 8) {
-                current_cell[0] += 1;
-            }
-        }
     }
     if (48 <= keyCode && keyCode < 58) {
         const value = number_to_value(keyCode);

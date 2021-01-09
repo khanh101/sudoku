@@ -17,3 +17,10 @@ type PosView struct {
 	Col int    `json:"col"`
 	Val int    `json:"value"`
 }
+
+// PointView :
+type PointView struct {
+	Key string `json:"key"`
+	Row int    `json:"row"`
+	Col int    `json:"col"`
+}

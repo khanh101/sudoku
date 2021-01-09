@@ -6,7 +6,7 @@ function interval_access() {
     });
 }
 
-function login_random() {
+function login_random_and_draw() {
     const textkey = document.getElementById("key");
     httpPost("api/new", "json", {}, function(response) {
         key = response.key;
@@ -16,7 +16,7 @@ function login_random() {
     });
 }
 
-function login_key() {
+function login_key_and_draw() {
     const textkey = document.getElementById("key");
     if (textkey.value.length === 0) {
         textkey.value = new Array(81 + 1).join("0");
@@ -31,7 +31,7 @@ function login_key() {
     });
 }
 
-function login_board() {
+function login_board_and_draw() {
     const textkey = document.getElementById("key");
     const textboard = document.getElementById("board");
     httpPost("api/new", "json", {
@@ -56,6 +56,7 @@ function update_board(cb) {
         current_board = response.current_board;
         initial_mask = response.initial_mask;
         violation_mask = response.violation_mask;
+        current_cell = [response.pointer.row, response.pointer.col];
         state = STATE_PLAYING;
         document.getElementById("board").value = get_current_board_string();
         cb();
@@ -101,5 +102,13 @@ function implication_button() {
         current_explanation = response.explanation;
         document.getElementById("implication").textContent = `implication: found {row: ${row}, col: ${col}} is ${value}`;
     })
+}
 
+function pointer(row, col, cb) {
+    console.log(row, col)
+    httpPost("api/point", "json", {
+        key: key,
+        row: row,
+        col: col,
+    }, cb);
 }
