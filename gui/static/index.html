@@ -14,9 +14,9 @@
                 <td>
                     README
                     <br>
-                    1. Paste your Board and Play: (Board is a row-major string of numbers, 81 numbers)
+                    1. Randomize Board and Play: (Hardness is random)
                     <br>
-                    2. Randomize Board and Play: (Hardness is random)
+                    2. Paste your Board and Play: (Board is a row-major string of numbers, 81 numbers)
                     <br>
                     3. Join game with your friends using Room ID
                     <br>
@@ -38,11 +38,14 @@
                     <br>
                     <br>
                     <br>
-                    Board: <textarea id="board"></textarea>
-                    <button id="new_board" onclick="login_board_and_draw()">Play with Board</button>
-                    <button id="new_random" onclick="login_random_and_draw()">Play with Randomized Board</button>
+                    <button id="new_random" onclick="login_random_and_draw()">Play with random Board</button>
                     <br>
-                    Room ID: <textarea id="key"></textarea>
+                    Board: <textarea id="board" rows=1 cols=81></textarea>
+                    <br>
+                    <button id="new_board" onclick="login_board_and_draw()">Play with Board</button>
+                    <br>
+                    Room ID: <textarea id="key" rows=1 cols=20></textarea>
+                    <br>
                     <button id="login_key" onclick="login_key_and_draw()">Login with Room ID</button>
                     <br>
                     <div id="timer"></div>
