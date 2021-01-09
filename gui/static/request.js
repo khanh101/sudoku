@@ -11,6 +11,9 @@ function login_random_and_draw() {
     httpPost("api/new", "json", {}, function(response) {
         key = response.key;
         textkey.value = key;
+        document.getElementById("new_board").style.display = "none"
+        document.getElementById("new_random").style.display = "none"
+        document.getElementById("login_key").style.display = "none"
         interval_access();
         draw();
     });
@@ -23,6 +26,9 @@ function login_key_and_draw() {
     }, function(response) {
         key = response.key;
         textkey.value = key;
+        document.getElementById("new_board").style.display = "none"
+        document.getElementById("new_random").style.display = "none"
+        document.getElementById("login_key").style.display = "none"
         interval_access();
         draw();
     });
@@ -39,6 +45,9 @@ function login_board_and_draw() {
     }, function(response) {
         key = response.key;
         textkey.value = key;
+        document.getElementById("new_board").style.display = "none"
+        document.getElementById("new_random").style.display = "none"
+        document.getElementById("login_key").style.display = "none"
         interval_access();
         draw();
     });
