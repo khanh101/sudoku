@@ -188,17 +188,34 @@ func (g *game) Undo() (ok bool, view PlacementView) {
 func (g *game) Place(p PlacementView) {
 	g.mtx.Lock()
 	defer g.mtx.Unlock()
-	g.pointer = CellView{
-		Row: p.Row,
-		Col: p.Col,
-	}
-	if !g.initial[p.Row][p.Col] {
-		g.current[p.Row][p.Col] = p.Val
-		if p.Val > 0 {
-			g.stack = append(g.stack, p)
+	if g.validRowColVal(p.Row, p.Col, p.Val) {
+		if !g.initial[p.Row][p.Col] {
+			g.current[p.Row][p.Col] = p.Val
+			if p.Val > 0 {
+				g.stack = append(g.stack, p)
+			}
+			g.violation = g.getViolation()
 		}
-		g.violation = g.getViolation()
+		g.pointer = CellView{
+			Row: p.Row,
+			Col: p.Col,
+		}
 	}
+}
+
+func (g *game) Point(pointer CellView) {
+	g.mtx.Lock()
+	defer g.mtx.Unlock()
+	if g.validRowCol(pointer.Row, pointer.Col) {
+		g.pointer = pointer
+	}
+}
+
+func (g *game) validRowCol(row int, col int) bool {
+	return row >= 0 && row <= g.n*g.n && col >= 0 && col <= g.n*g.n
+}
+func (g *game) validRowColVal(row int, col int, val int) bool {
+	return row >= 0 && row < g.n*g.n && col >= 0 && col < g.n*g.n && val >= 0 && val <= g.n*g.n
 }
 
 func abs(x int) int {
@@ -209,10 +226,4 @@ func abs(x int) int {
 		return -x
 	}
 	return 0
-}
-
-func (g *game) Point(pointer CellView) {
-	g.mtx.Lock()
-	defer g.mtx.Unlock()
-	g.pointer = pointer
 }
