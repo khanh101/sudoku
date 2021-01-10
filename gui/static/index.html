@@ -2,10 +2,10 @@
 <head>
     <title>sudoku</title>
     <script src="./vendor/p5.js"></script>
-    <script type="module" src="./sketch.js"></script>
+    <script type="module" src="./init.js"></script>
 </head>
 <body>
-    <main>
+<main>
         <table style="width: 100%">
             <tr>
                 <td><div id="p5canvas"></div></td>
@@ -36,15 +36,15 @@
                     <br>
                     <br>
                     <br>
-                    <button id="new_random" onclick="login_with_random()">Play with random Board</button>
+                    <button id="new_random">Play with random Board</button>
                     <br>
                     <b>Board:</b><textarea id="board" rows=1 cols=81></textarea>
                     <br>
-                    <button id="new_board" onclick="login_with_board()">Play with Board</button>
+                    <button id="new_board">Play with Board</button>
                     <br>
                     <b>Room ID:</b><textarea id="key" rows=1 cols=20></textarea>
                     <br>
-                    <button id="login_key" onclick="login_with_key()">Login with Room ID</button>
+                    <button id="login_key">Login with Room ID</button>
                     <br>
                     <div id="timer"></div>
                     <div id="implication"></div>

@@ -40,18 +40,39 @@ class Board {
     }
 
     preload(p5) {
-        this.image.waiting.panel = image_resize(p5.loadImage("assets/waiting_panel.png"), this.panel_size);
-        this.image.waiting.board = image_resize(p5.loadImage("assets/waiting.png"), this.board_size);
-        this.image.playing.panel = image_resize(p5.loadImage("assets/playing_panel.png"), this.panel_size);
-        this.image.playing.board.block = image_resize(p5.loadImage("assets/block.png"), this.block_size);
-        this.image.playing.board.current = image_resize(p5.loadImage("assets/current.png"), this.cell_size);
-        this.image.playing.board.initial = image_resize(p5.loadImage("assets/initial.png"), this.cell_size);
-        this.image.playing.board.violation = image_resize(p5.loadImage("assets/violation.png"), this.cell_size);
+        let self = this;
+        this.image.waiting.panel = p5.loadImage("assets/waiting_panel.png", function(img) {
+            img.resize(...self.panel_size);
+        });
+        this.image.waiting.board = p5.loadImage("assets/waiting.png", function(img) {
+            img.resize(...self.board_size);
+        });
+        this.image.playing.panel = p5.loadImage("assets/playing_panel.png", function(img) {
+            img.resize(...self.panel_size);
+        });
+        this.image.playing.board.block = p5.loadImage("assets/block.png", function (img) {
+            img.resize(...self.block_size);
+        });
+        this.image.playing.board.current = p5.loadImage("assets/current.png", function(img) {
+            img.resize(...self.cell_size);
+        });
+        this.image.playing.board.initial = p5.loadImage("assets/initial.png", function(img) {
+            img.resize(...self.cell_size);
+        });
+        this.image.playing.board.violation = p5.loadImage("assets/violation.png", function(img) {
+            img.resize(...self.cell_size);
+        });
         for (let num = 0; num < this.image.playing.board.value_list.length; num++) {
-            this.image.playing.board.value_list.push(image_resize(p5.loadImage(`assets/${num}.png`), this.cell_size));
+            this.image.playing.board.value_list.push(p5.loadImage(`assets/${num}.png`, function(img) {
+                img.resize(...self.cell_size);
+            }));
         }
-        this.image.playing.board.explanation = image_resize(p5.loadImage("assets/explanation.png"), this.cell_size);
-        this.image.playing.youwin_panel = image_resize(p5.loadImage("assets/youwin_panel.png"), this.panel_size);
+        this.image.playing.board.explanation = p5.loadImage("assets/explanation.png", function(img) {
+            img.resize(...self.cell_size);
+        });
+        this.image.playing.youwin_panel = p5.loadImage("assets/youwin_panel.png", function(img) {
+            img.resize(...self.panel_size);
+        });
     }
 
     setup(p5) {
@@ -62,11 +83,13 @@ class Board {
 
     draw_canvas(p5) {
         if (this.key === null) { // waiting
+            p5.background(200, 200, 200);
             p5.image(this.image.waiting.panel, ...this.panel_topleft);
             p5.image(this.image.waiting.board, ...this.board_topleft);
         } else { // playing
             let self = this;
             this.update_board(p5, function (response) {
+                p5.background(200, 200, 200);
                 self.draw_board(
                     p5,
                     response.youwin,
@@ -84,7 +107,7 @@ class Board {
         if (youwin) {
             p5.image(this.image.playing.youwin_panel, ...this.panel_topleft);
         } else {
-            this.image(this.image.playing.panel, ...this.panel_topleft);
+            p5.image(this.image.playing.panel, ...this.panel_topleft);
         }
         // initial
         for (let row = 0; row < 9; row++) {

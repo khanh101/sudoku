@@ -1,4 +1,4 @@
-import {game} from "./sketch.js"
+import {game, sketch} from "./sketch.js"
 
 function interval_access() {
     httpPost("api/interval_access", "json", {
@@ -18,13 +18,13 @@ function setup(response) {
 }
 
 function login_random() {
-    const textkey = document.getElementById("key");
-    httpPost("api/new", "json", {}, setup);
+    console.log("haha");
+    sketch.httpPost("api/new", "json", {}, setup);
 }
 
 function login_key() {
     const textkey = document.getElementById("key");
-    httpPost("api/login", "json", {
+    sketch.httpPost("api/login", "json", {
         key: textkey.value,
     }, setup);
 }
@@ -34,10 +34,11 @@ function login_board() {
     if (textboard.value.length === 0) {
         textboard.value = new Array(81 + 1).join("0");
     }
-    httpPost("api/new", "json", {
+    sketch.httpPost("api/new", "json", {
         board: textboard.value,
     }, setup);
 }
-window.login_with_board = login_board;
-window.login_with_key = login_key;
-window.login_with_random = login_random;
+
+document.querySelector("#new_random").addEventListener("click", login_random);
+document.querySelector("#new_board").addEventListener("click", login_board);
+document.querySelector("#login_key").addEventListener("click", login_key);
