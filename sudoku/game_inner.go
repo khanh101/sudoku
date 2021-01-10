@@ -124,21 +124,18 @@ func (g *game) Undo() (ok bool, view PlacementView) {
 	return true, view
 }
 
-func (g *game) Place(p PlacementView) {
+func (g *game) Place(v int) {
 	g.mtx.Lock()
 	defer g.mtx.Unlock()
-	if g.validRowColVal(p.Row, p.Col, p.Val) {
-		if !g.initial[p.Row][p.Col] {
-			g.current[p.Row][p.Col] = p.Val
-			if p.Val > 0 {
-				g.stack = append(g.stack, p)
-			}
-			g.violation = g.getViolation()
-		}
-		g.pointer = CellView{
-			Row: p.Row,
-			Col: p.Col,
-		}
+	r, c := g.pointer.Row, g.pointer.Col
+	if !g.initial[r][c] {
+		g.current[r][c] = v
+		g.stack = append(g.stack, PlacementView{
+			Row: r,
+			Col: c,
+			Val: v,
+		})
+		g.violation = g.getViolation()
 	}
 }
 

@@ -3,7 +3,7 @@ package sudoku
 // Game :
 type Game interface {
 	View() GameView
-	Place(PlacementView)
+	Place(value int)
 	Undo() (bool, PlacementView)
 	Implication() (bool, ImplicationView)
 	Point(pointer CellView)

@@ -103,12 +103,12 @@ func NewServer(seed int) Server {
 		c.JSON(http.StatusOK, nil)
 	})
 	s.r.POST("/api/place", func(c *gin.Context) {
-		pos := PosView{}
-		if err := c.BindJSON(&pos); err != nil {
+		place := PlaceView{}
+		if err := c.BindJSON(&place); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
 			return
 		}
-		value := s.s.get(pos.Key)
+		value := s.s.get(place.Key)
 		if value == nil {
 			c.JSON(http.StatusNotFound, nil)
 			return
@@ -117,15 +117,11 @@ func NewServer(seed int) Server {
 		if game == nil {
 			panic("wrong")
 		}
-		game.Place(sudoku.PlacementView{
-			Row: pos.Row,
-			Col: pos.Col,
-			Val: pos.Val,
-		})
+		game.Place(place.Val)
 		c.JSON(http.StatusOK, nil)
 	})
 	s.r.POST("/api/undo", func(c *gin.Context) {
-		pos := PosView{}
+		pos := KeyView{}
 		if err := c.BindJSON(&pos); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
 			return
@@ -147,7 +143,7 @@ func NewServer(seed int) Server {
 		c.JSON(http.StatusOK, view)
 	})
 	s.r.POST("/api/implication", func(c *gin.Context) {
-		pos := PosView{}
+		pos := KeyView{}
 		if err := c.BindJSON(&pos); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
 			return
@@ -169,7 +165,7 @@ func NewServer(seed int) Server {
 		c.JSON(http.StatusOK, view)
 	})
 	s.r.POST("/api/access", func(c *gin.Context) {
-		key := PosView{}
+		key := KeyView{}
 		if err := c.BindJSON(&key); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
 			return
