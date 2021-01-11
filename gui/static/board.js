@@ -29,7 +29,7 @@ class Board {
                     current: null,
                     initial: null,
                     violation: null,
-                    value_list: [],
+                    value_list: null,
                     explanation: null,
                 },
                 youwin_panel: null,
@@ -62,7 +62,8 @@ class Board {
         this.image.playing.board.violation = p5.loadImage("assets/violation.png", function(img) {
             img.resize(...self.cell_size);
         });
-        for (let num = 0; num < this.image.playing.board.value_list.length; num++) {
+        this.image.playing.board.value_list = [];
+        for (let num = 0; num < 10; num++) {
             this.image.playing.board.value_list.push(p5.loadImage(`assets/${num}.png`, function(img) {
                 img.resize(...self.cell_size);
             }));
@@ -89,6 +90,9 @@ class Board {
         } else { // playing
             let self = this;
             this.update_board(p5, function (response) {
+                document.getElementById("key").value = self.key;
+                document.getElementById("board").value = response.current_string;
+                document.getElementById("message").textContent = response.message;
                 p5.background(200, 200, 200);
                 self.draw_board(
                     p5,
@@ -97,12 +101,13 @@ class Board {
                     response.violation_mask,
                     response.current_board,
                     response.pointer,
+                    response.explanation,
                 )
             });
         }
     }
 
-    draw_board(p5, youwin, initial_mask, violation_mask, current_board, pointer) {
+    draw_board(p5, youwin, initial_mask, violation_mask, current_board, pointer, explanation) {
         // panel
         if (youwin) {
             p5.image(this.image.playing.youwin_panel, ...this.panel_topleft);
@@ -149,15 +154,7 @@ class Board {
                 }
             }
         }
-
-        // current
-        p5.image(
-            self.image.playing.current,
-            ...self.cell_to_topleft(pointer.row, pointer.col)
-        )
-    }
-
-    draw_explanation(p5, explanation) {
+        // explanation
         for (let i = 0; i < explanation.length; i++) {
             const cell = explanation[i];
             const row = cell.row;
@@ -167,6 +164,12 @@ class Board {
                 ...this.cell_to_topleft(row, col),
             )
         }
+
+        // current
+        p5.image(
+            this.image.playing.board.current,
+            ...this.cell_to_topleft(pointer.row, pointer.col)
+        )
     }
 
     mousePressed(p5) {
@@ -192,14 +195,13 @@ class Board {
 
         if ((48 <= p5.keyCode && p5.keyCode < 58) || (96 <= p5.keyCode && p5.keyCode < 106) || p5.keyCode === 88 || p5.keyCode === 8 || p5.keyCode === 46) {
             // number, numpad, x, backspace, delete
-            let val = null;
+            let val = 0;
             if (48 <= p5.keyCode && p5.keyCode < 58) {
                 val = number_to_value(p5.keyCode);
             }
             if (96 <= p5.keyCode && p5.keyCode < 106) {
                 val = numpad_to_value(p5.keyCode);
             }
-            val = 0;
             this.place(p5, val, function (response) {
                 self.draw_canvas(p5);
             });
@@ -211,12 +213,7 @@ class Board {
         }// u
         if (p5.keyCode === 72) {
             this.implication(p5, function (response) {
-                const {row, col, val, explanation} = response;
-                self.point(p5, row, col, function(response) {
-                   self.place(p5, val, function (response) {
-                        self.draw_explanation(p5, explanation);
-                   })
-                });
+                self.draw_canvas(p5);
             });
         }// h
 
@@ -246,13 +243,13 @@ class Board {
 
     undo(p5, cb) {
         p5.httpPost("api/undo", "json", {
-            key: key,
+            key: this.key,
         }, cb);
     }
 
     implication(p5, cb) {
         p5.httpPost("api/implication", "json", {
-            key: key,
+            key: this.key,
         }, cb);
     }
 

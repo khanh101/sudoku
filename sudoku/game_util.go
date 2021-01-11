@@ -1,5 +1,16 @@
 package sudoku
 
+func (g *game) lock(f func() interface{}) interface{} {
+	g.mtx.Lock()
+	defer g.mtx.Unlock()
+	return f()
+}
+func (g *game) rlock(f func() interface{}) interface{} {
+	g.mtx.RLock()
+	defer g.mtx.RUnlock()
+	return f()
+}
+
 func (g *game) getViolationCell(cin c) []c {
 	out := make([]c, 0, 3*g.n*g.n)
 	for ri := 0; ri < g.n*g.n; ri++ {

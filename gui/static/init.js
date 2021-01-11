@@ -1,16 +1,16 @@
 import {game, sketch} from "./sketch.js"
-
+/*
 function interval_access() {
-    httpPost("api/interval_access", "json", {
+    sketch.httpPost("api/interval_access", "json", {
         key: game.key,
     }, function() {
         setTimeout(interval_access, 30000);
     });
 }
-
+*/
 function setup(response) {
     game.key = response.key;
-    interval_access();
+    //interval_access();
     document.getElementById("key").value = response.key;
     document.getElementById("new_board").style.display = "none"
     document.getElementById("new_random").style.display = "none"
@@ -18,7 +18,6 @@ function setup(response) {
 }
 
 function login_random() {
-    console.log("haha");
     sketch.httpPost("api/new", "json", {}, setup);
 }
 

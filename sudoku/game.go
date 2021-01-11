@@ -3,9 +3,9 @@ package sudoku
 // Game :
 type Game interface {
 	View() GameView
-	Place(value int)
-	Undo() (bool, PlacementView)
-	Implication() (bool, ImplicationView)
+	Place(value int) bool
+	Undo() bool
+	Implication() bool
 	Point(pointer CellView)
 }
 
@@ -27,11 +27,13 @@ func NewGame(n int, current Board) (Game, bool) {
 	}
 	printBoard(solution)
 	g := &game{
-		n:        n,
-		current:  current,
-		initial:  initial,
-		solution: solution,
-		stack:    make([]PlacementView, 0),
+		n:           n,
+		current:     current,
+		initial:     initial,
+		solution:    solution,
+		stack:       make([]CellView, 0),
+		explanation: make([]CellView, 0),
+		message:     "newly created board",
 	}
 	g.violation = g.getViolation()
 	return g, true

@@ -121,12 +121,12 @@ func NewServer(seed int) Server {
 		c.JSON(http.StatusOK, nil)
 	})
 	s.r.POST("/api/undo", func(c *gin.Context) {
-		pos := KeyView{}
-		if err := c.BindJSON(&pos); err != nil {
+		key := KeyView{}
+		if err := c.BindJSON(&key); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
 			return
 		}
-		value := s.s.get(pos.Key)
+		value := s.s.get(key.Key)
 		if value == nil {
 			c.JSON(http.StatusNotFound, nil)
 			return
@@ -135,20 +135,16 @@ func NewServer(seed int) Server {
 		if game == nil {
 			panic("wrong")
 		}
-		ok, view := game.Undo()
-		if !ok {
-			c.JSON(http.StatusOK, nil)
-			return
-		}
-		c.JSON(http.StatusOK, view)
+		game.Undo()
+		c.JSON(http.StatusOK, nil)
 	})
 	s.r.POST("/api/implication", func(c *gin.Context) {
-		pos := KeyView{}
-		if err := c.BindJSON(&pos); err != nil {
+		key := KeyView{}
+		if err := c.BindJSON(&key); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
 			return
 		}
-		value := s.s.get(pos.Key)
+		value := s.s.get(key.Key)
 		if value == nil {
 			c.JSON(http.StatusNotFound, nil)
 			return
@@ -157,12 +153,8 @@ func NewServer(seed int) Server {
 		if game == nil {
 			panic("wrong")
 		}
-		ok, view := game.Implication()
-		if !ok {
-			c.JSON(http.StatusOK, nil)
-			return
-		}
-		c.JSON(http.StatusOK, view)
+		game.Implication()
+		c.JSON(http.StatusOK, nil)
 	})
 	s.r.POST("/api/access", func(c *gin.Context) {
 		key := KeyView{}

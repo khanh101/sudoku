@@ -12,6 +12,12 @@ const sketch = new p5(function(p5) {
     p5.draw = function () {
         game.draw_canvas(p5);
     }
+    p5.mousePressed = function() {
+        game.mousePressed(p5);
+    }
+    p5.keyPressed = function() {
+        game.keyPressed(p5);
+    }
 });
 
 export {game, sketch};

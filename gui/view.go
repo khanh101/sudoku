@@ -13,7 +13,7 @@ type BoardView struct {
 // PlaceView :
 type PlaceView struct {
 	Key string `json:"key"`
-	Val int    `json:"value"`
+	Val int    `json:"val"`
 }
 
 // PointView :
