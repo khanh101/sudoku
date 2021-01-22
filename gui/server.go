@@ -12,7 +12,7 @@ import (
 
 // Server :
 type Server interface {
-	Run(addr string)
+	Handler() *gin.Engine
 }
 
 // Timeout :

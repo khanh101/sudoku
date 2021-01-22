@@ -15,6 +15,6 @@ type server struct {
 	rand *rand.Rand
 }
 
-func (s *server) Run(addr string) {
-	s.r.Run(addr)
+func (s *server) Handler() *gin.Engine {
+	return s.r
 }

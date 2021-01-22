@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-go get github.com/khanhhhh/sudoku
-go get github.com/irifrance/gini
-go get github.com/gin-gonic/gin
-GIN_MODE=release go run main.go
