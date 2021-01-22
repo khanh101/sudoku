@@ -28,8 +28,10 @@ func NewServer(seed int) Server {
 	// init (3*3 x 3*3) board
 	sudoku.ReduceBase(N)
 
-	s.r.Static("/", "./gui/static/")
-	s.r.POST("/api/new", func(c *gin.Context) {
+	r := s.r.Group("/sudoku/")
+
+	r.Static("/", "./gui/static/")
+	r.POST("/api/new", func(c *gin.Context) {
 		boardView := BoardView{}
 		if err := c.BindJSON(&boardView); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
@@ -52,7 +54,7 @@ func NewServer(seed int) Server {
 		s.s.set(key.Key, game)
 		c.JSON(http.StatusOK, key)
 	})
-	s.r.POST("/api/login", func(c *gin.Context) {
+	r.POST("/api/login", func(c *gin.Context) {
 		key := KeyView{}
 		if err := c.BindJSON(&key); err == nil {
 			value := s.s.get(key.Key)
@@ -63,7 +65,7 @@ func NewServer(seed int) Server {
 		}
 		c.JSON(http.StatusBadRequest, nil)
 	})
-	s.r.POST("/api/view", func(c *gin.Context) {
+	r.POST("/api/view", func(c *gin.Context) {
 		key := KeyView{}
 		if err := c.BindJSON(&key); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
@@ -81,7 +83,7 @@ func NewServer(seed int) Server {
 		c.JSON(http.StatusOK, game.View())
 		return
 	})
-	s.r.POST("/api/point", func(c *gin.Context) {
+	r.POST("/api/point", func(c *gin.Context) {
 		point := PointView{}
 		if err := c.BindJSON(&point); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
@@ -102,7 +104,7 @@ func NewServer(seed int) Server {
 		})
 		c.JSON(http.StatusOK, nil)
 	})
-	s.r.POST("/api/place", func(c *gin.Context) {
+	r.POST("/api/place", func(c *gin.Context) {
 		place := PlaceView{}
 		if err := c.BindJSON(&place); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
@@ -120,7 +122,7 @@ func NewServer(seed int) Server {
 		game.Place(place.Val)
 		c.JSON(http.StatusOK, nil)
 	})
-	s.r.POST("/api/undo", func(c *gin.Context) {
+	r.POST("/api/undo", func(c *gin.Context) {
 		key := KeyView{}
 		if err := c.BindJSON(&key); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
@@ -138,7 +140,7 @@ func NewServer(seed int) Server {
 		game.Undo()
 		c.JSON(http.StatusOK, nil)
 	})
-	s.r.POST("/api/implication", func(c *gin.Context) {
+	r.POST("/api/implication", func(c *gin.Context) {
 		key := KeyView{}
 		if err := c.BindJSON(&key); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
@@ -156,7 +158,7 @@ func NewServer(seed int) Server {
 		game.Implication()
 		c.JSON(http.StatusOK, nil)
 	})
-	s.r.POST("/api/access", func(c *gin.Context) {
+	r.POST("/api/access", func(c *gin.Context) {
 		key := KeyView{}
 		if err := c.BindJSON(&key); err != nil {
 			c.JSON(http.StatusBadRequest, nil)
@@ -164,7 +166,7 @@ func NewServer(seed int) Server {
 		}
 		s.s.get(key.Key)
 	})
-	s.r.POST("/api/global_stats", func(c *gin.Context) {
+	r.POST("/api/global_stats", func(c *gin.Context) {
 		c.JSON(http.StatusOK, map[string]interface{}{
 			"number of active users": s.s.numActiveKey(),
 		})
