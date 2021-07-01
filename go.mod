@@ -1,4 +1,4 @@
-module github.com/khanhhhh/sudoku
+module github.com/khanhcsc/sudoku
 
 go 1.15
 
