@@ -1,6 +1,6 @@
 package sudoku
 
-import "github.com/khanhhhh/sudoku/sat"
+import "github.com/khanh-nguyen-code/sudoku/sat"
 
 var baseCNF = make(map[int]sat.CNF)
 var v2p = make(map[int]map[v]p)

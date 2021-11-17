@@ -2,9 +2,8 @@ package sudoku
 
 import (
 	"fmt"
+	"github.com/khanh-nguyen-code/sudoku/sat"
 	"sync"
-
-	"github.com/khanhhhh/sudoku/sat"
 )
 
 type game struct {

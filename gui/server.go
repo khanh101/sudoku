@@ -1,13 +1,13 @@
 package gui
 
 import (
+	"github.com/khanh-nguyen-code/sudoku/sudoku"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/khanhhhh/sudoku/sudoku"
 )
 
 // Server :

@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/khanh-nguyen-code/sudoku/gui"
 	"time"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/khanhhhh/sudoku/gui"
 )
 
 func main() {
@@ -17,6 +16,6 @@ func main() {
 	addr := fmt.Sprintf("0.0.0.0:%d", portno)
 	s := gui.NewServer(seed)
 	fmt.Printf("Server is up at: http://%s/sudoku/ \n", addr)
-	s.Handler().Run(addr)
+	_ = s.Handler().Run(addr)
 	return
 }

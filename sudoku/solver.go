@@ -1,6 +1,6 @@
 package sudoku
 
-import "github.com/khanhhhh/sudoku/sat"
+import "github.com/khanh-nguyen-code/sudoku/sat"
 
 // SolveOnce :
 func SolveOnce(n int, board Board, excludedList []Board) (satisfiable bool, result Board) {
